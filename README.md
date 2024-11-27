@@ -9,7 +9,7 @@ Or modify this project according to your needs, input 302.AI's API KEY, and depl
 ## Interface Preview
 ![Interface Preview](docs/preview.jpg)
 ![Interface Preview](docs/preview2.jpg)
-![Interface Preview](docs/preview3.jpg)
+![Interface Preview](docs/preview3.jpg)   1
 
 ## ✨ About 302.AI ✨
 [302.AI](https://302.ai) is a pay-as-you-go AI application platform, solving the last mile problem of AI practical applications for users.
