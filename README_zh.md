@@ -6,7 +6,7 @@
 
 <p align="center"><a href="README zh.md">中文 | English | 日本語</a></p>
 
-![海报]()
+![海报](https://file.302ai.cn/gpt/imgs/github/20241128-181212.jpeg)
 
 
 来自[302.AI](https://302.ai)的[AI 文档编辑器](https://302.ai/tools/word/)的开源版本。
