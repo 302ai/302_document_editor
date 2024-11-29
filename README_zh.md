@@ -17,8 +17,8 @@
 ![界面预览](docs/preview.jpg)
 ![界面预览](docs/preview2.jpg)
 ![界面预览](docs/preview3.jpg)
-
-
+![界面预览](docs/文档编辑1.jpg)
+![界面预览](docs/文档编辑2.jpg)
 
 ## 项目特性
 
