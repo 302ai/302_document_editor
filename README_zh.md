@@ -2,7 +2,7 @@
 
 <p align="center">AI文档编辑器利用语言大模型辅助用户进行长文创作，提供类似Word的编辑体验，提供高质量的AI全文总结、全文翻译、全文改写、全文朗读、智能配图、一键生成长文功能，提供九种风格化文档模板以供选择，并支持将文档导出为多种格式。</p>
 
-[![302标签](302标签)]
+[![302标签](https://file.302ai.cn/gpt/imgs/badge/画板1.svg)]
 
 <p align="center"><a href="README zh.md">中文 | English | 日本語</a></p>
 
