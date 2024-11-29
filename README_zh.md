@@ -4,7 +4,7 @@
 
 [![302标签](302标签)]
 
-[中文](README_zh.md) | [English](README.md) | [日本語](README_ja.md)
+<p align="center"><a href="README zh.md">中文 | English | 日本語</a></p>
 
 ![海报]()
 
