@@ -4,7 +4,7 @@
 
 <p align="center"><a href="https://302.ai/tools/word/" target="blank"><img src="https://file.302ai.cn/gpt/imgs/badge/21212.png" /></a></p >
 
-<p align="center"><a href="README zh.md">中文 | English | 日本語</a ></p >
+<p align="center"><a href="README zh.md">中文</a> | <a href="README.md">English</a> | <a href="README_ja.md">日本語</a></p>
 
 ![](https://file.302ai.cn/gpt/imgs/github/20241128-181212.jpeg)
 
