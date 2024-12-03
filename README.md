@@ -13,19 +13,19 @@ Or modify this project according to your needs, input 302.AI's API KEY, and depl
 
 ## Interface Preview
 Full-text summarization function: Based on the document, the AI automatically summarizes the full text and generates article abstracts, mind maps and tables.
-![Interface Preview](docs/preview.jpg)       
+![Interface Preview](docs/文档编辑英1.png)       
 
 Intelligent image matching function: It can search for illustrations, and also generate illustrations by inputting prompts. Users can freely choose the image generation model and size ratio.
-![Interface Preview](docs/preview2.jpg)     
+![Interface Preview](docs/文档编辑英2.png)     
 
 Information search function: According to the input description, the left column generates articles, news, website addresses and other information corresponding to the information, while the right column displays the content of the information and generates content abstracts.
-![Interface Preview](docs/preview3.jpg)     
+![Interface Preview](docs/文档编辑英3.png)     
 
 Template stylization function: There are a variety of stylized document templates available for selection.
-![界面预览](docs/文档编辑1.png)     
+![界面预览](docs/文档编辑英4.png)     
 
 Taking the briefing as an example, based on the selected information, the AI automatically summarizes and generates the briefing.
-![界面预览](docs/文档编辑2.png)
+![界面预览](docs/文档编辑英5.png)
 
 
 ## Project Features
