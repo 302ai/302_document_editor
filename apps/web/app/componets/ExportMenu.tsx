@@ -89,11 +89,15 @@ export function ExportMenu(props: IProps) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${title || t('Untitled')[language]}.html`;
+    link.download = `${title || t('Untitled')}.html`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+    toast({
+      duration: 3000,
+      description: t('Export_completed')
+    })
   };
 
   // Export Markdown file
@@ -109,7 +113,7 @@ export function ExportMenu(props: IProps) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${title || t('Untitled')[language]}.md`;
+    link.download = `${title || t('Untitled')}.md`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -142,7 +146,7 @@ export function ExportMenu(props: IProps) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${title || t('Untitled')[language]}.json`;
+    link.download = `${title || t('Untitled')}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -167,7 +171,7 @@ export function ExportMenu(props: IProps) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${title || t('Untitled')[language]}.txt`;
+    link.download = `${title || t('Untitled')}.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -180,23 +184,35 @@ export function ExportMenu(props: IProps) {
   };
 
   // Export docx
-  const exportDocx = () => {
-    let htmlContent = window.localStorage.getItem('html-content')
-    const title = window.localStorage.getItem('novel-title');
-    if (!htmlContent) {
-      onToast(t('not_export_content'))
+  const exportDocx = async () => {
+    try {
+      const htmlContent = localStorage.getItem('html-content');
+      const title = localStorage.getItem('novel-title');
+
+      const response = await fetch('/api/exportDocx', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          htmlContent,
+          title
+        })
+      });
+
+      if (!response.ok) {
+        toast({ duration: 3000, description: t('Export_error') })
+        return;
+      }
+
+      const blob = await response.blob();
+
+      saveAs(blob, `${title || t('Untitled')}.docx`);
+      toast({ duration: 3000, description: t('Export_completed') })
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({ duration: 3000, description: t('Export_error') })
     }
-
-    const newContent = `<h1 style="text-align: center;">${title || t('Untitled')[language]}</h1>`;
-
-    htmlContent = htmlContent.replace('<body>', `<body>${newContent}`);
-    asBlob(htmlContent).then(data => {
-      saveAs(data, `${title || t('Untitled')[language]}.docx`)
-    })
-    toast({
-      duration: 3000,
-      description: t('Export_completed')
-    })
   }
 
   // Export PDF
@@ -224,7 +240,7 @@ export function ExportMenu(props: IProps) {
         const url = URL.createObjectURL(data);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `${title || t('Untitled')[language]}.pdf`;
+        link.download = `${title || t('Untitled')}.pdf`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -236,7 +252,6 @@ export function ExportMenu(props: IProps) {
       }
     } catch (error) {
       console.log(error);
-
       toast({
         duration: 2000,
         description: (ErrMessage(error?.err_code, language))
@@ -246,7 +261,7 @@ export function ExportMenu(props: IProps) {
 
   const onClickButton = (type: string) => {
     toast({
-      duration: 3000,
+      duration: Infinity,
       description: t('Exporting')
     })
     switch (type) {

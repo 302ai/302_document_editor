@@ -185,5 +185,22 @@
   "describe_tips": "説明を入力してください",
   "Generate_illustrations_for_prompt_words": "プロンプト単語生成の図",
   "AI_search_for_illustrations": "検索イラスト",
-  "search": "検索"
+  "search": "検索",
+  "Export_error": "エクスポートに失敗しました",
+  "Reading_doc": "ファイルの内容を読み取り中です。しばらくお待ちください",
+  "markdownToPoster": {
+    "Poster_download_failed": "ポスターのダウンロードに失敗しました"
+  },
+  "MarkdownToPoster": {
+    "download": "ダウンロード",
+    "signature": "ポスターの署名欄",
+    "canvasSize": "キャンバスサイズ",
+    "Margins": "マージン",
+    "LayoutTheme": "タイポグラフィーのテーマ",
+    "fontSize": "フォントサイズ",
+    "bg": "背景",
+    "Save_as_Image": "画像として保存"
+  },
+  "Save_as_Image": "画像として保存",
+  "open_docx": "オープンに失敗しました"
 }

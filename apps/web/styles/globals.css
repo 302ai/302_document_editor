@@ -472,3 +472,41 @@ td {
 .ProseMirror table img {
   margin: 5px 0;
 }
+
+
+
+.blueFrostedWave {
+  background-image: url('../public/BlueFrostedWave.webp');
+}
+
+.cartoon {
+  background-image: url('../public/Cartoon.webp');
+}
+
+.chrysanthemumAndLove {
+  background-image: url('../public/ChrysanthemumAndLove.webp');
+}
+
+.cute {
+  background-image: url('../public/Cute.webp');
+}
+
+.geometricBirds {
+  background-image: url('../public/GeometricBirds.webp');
+}
+
+.inkPainting {
+  background-image: url('../public/InkPainting.webp');
+}
+
+.salesMan {
+  background-image: url('../public/SalesMan.webp');
+}
+
+.springGradientWave {
+  background-image: url('../public/SpringGradientWave.webp');
+}
+
+.sunsetGradientWave {
+  background-image: url('../public/SunsetGradientWave.webp');
+}

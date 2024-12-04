@@ -185,5 +185,22 @@
   "describe_tips": "请输入描述",
   "Generate_illustrations_for_prompt_words": "提示词生成插图",
   "AI_search_for_illustrations": "搜索插图",
-  "search": "搜索"
+  "search": "搜索",
+  "Export_error": "导出失败",
+  "Reading_doc": "正在读取文件内容，请耐心等待",
+  "markdownToPoster": {
+    "Poster_download_failed": "海报下载失败"
+  },
+  "MarkdownToPoster": {
+    "download": "下载",
+    "signature": "海报署名栏",
+    "canvasSize": "画布大小",
+    "Margins": "边距",
+    "LayoutTheme": "排版主题",
+    "fontSize": "字体大小",
+    "bg": "背景",
+    "Save_as_Image": "保存为图片"
+  },
+  "Save_as_Image": "保存为图片",
+  "open_docx": "打开失败"
 }

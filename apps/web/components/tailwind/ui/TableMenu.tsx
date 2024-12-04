@@ -86,6 +86,11 @@ export const TableMenu = ({ editor }: { editor: any }) => {
           startNode = startNode.parentNode;
         }
 
+        // Check if it is a table within the editor
+        if (!editor?.options.element?.contains(event.target as Node)) {
+          return;
+        }
+
         // Ensure that startNode is an element node and call closest ('table ')
         // @ts-ignore
         const tableNode = startNode.closest ? startNode.closest('table') : null;

@@ -23,7 +23,7 @@ export const FullTextSummary = () => {
   const t = useTranslations();
   const dispatch = useAppDispatch();
   const global = useAppSelector(selectGlobal);
-
+  const [editMindMap, setEditMindMap] = useState(false)
   const [activeTab, setActiveTab] = useState("MindMap")
   const [downloadMarkmapType, setDownloadMarkmapType] = useState({ fullScreen: '', default: '' })
 
@@ -226,7 +226,7 @@ export const FullTextSummary = () => {
             <Button onClick={() => { onFullTextSummary('novelSummary') }}>{t('Start_summarizing')}</Button>
           </div>
         }
-        <MarkdownViewer content={global.novelSummary} />
+        <MarkdownViewer content={global.novelSummary} editMindMap={editMindMap} onEditMindMap={setEditMindMap} />
       </div>
       <Tabs defaultValue="MindMap" className='flex flex-col justify-between relative' onValueChange={setActiveTab} style={{ height: 'calc(50% - 50px)' }}>
         <TabsList className="grid w-full grid-cols-2">

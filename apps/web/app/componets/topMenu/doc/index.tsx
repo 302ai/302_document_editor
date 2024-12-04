@@ -1,7 +1,7 @@
 const hljs = require('highlight.js');
 import ky from "ky";
 import dayjs from "dayjs";
-import { exportJSON } from "@/lib/tool";
+import { docxToHtml, exportJSON } from "@/lib/tool";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ErrMessage } from "../../ErrMessage";
@@ -25,6 +25,8 @@ import { FiFile, FiFilePlus } from "react-icons/fi";
 import { LuFileUp } from "react-icons/lu";
 import { MdOutlineSaveAlt } from "react-icons/md";
 import { CgExport } from "react-icons/cg";
+import { MarkdownToPoster } from "../../MarkdownToPoster";
+import { BsFiletypePng } from "react-icons/bs";
 
 interface IData {
   id: number;
@@ -55,6 +57,7 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
     ],
     'actionFile': [
       { lable: t('Save'), value: 'Save', icon: (<MdOutlineSaveAlt />) },
+      { lable: t('Save_as_Image'), value: 'Save as Image', icon: (<BsFiletypePng />) },
       { lable: t('Export'), value: 'Export', icon: (<CgExport />) },
     ]
   }
@@ -203,57 +206,93 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
     }))
   }
 
+  // Convert doc to html to md
+  const onDocxToHtml = async (file: File) => {
+    try {
+      const html = await docxToHtml(file)
+      if (html) {
+        onClearDocument();
+        setTimeout(() => {
+          const title = file.name.split('.')[0]
+          const htmlContent = removeColgroupTags(highlightCodeblocks(html));
+          const markdown = html2md(htmlContent)
+          editorInstance.chain().focus().insertContentAt(1, markdown).run();
+          setLocalStorage('novel-title', title)
+          dispatch(setGlobalState({ novelTitle: title }))
+        }, 500)
+      }
+      setOpen(false);
+    } catch (error) {
+      toast({
+        duration: 2000,
+        description: t('open_docx')
+      })
+      setOpen(false);
+    }
+  };
+
   // Open a new file
   const onOpenNewFile = (type: string) => {
     if (editorInstance) {
       if (type === 'Open local document') {
         const input = document.createElement("input");
         input.type = "file";
-        input.accept = ".md,.txt,.json,.pdf";
+        input.accept = ".md,.txt,.json,.pdf,.docx";
         input.onchange = async () => {
+          await onSave()
           if (input.files?.length) {
             const file = input.files[0];
-            if (file && (file.name.endsWith('.md') || file.name.endsWith('.txt') || file.name.endsWith('.json') || file.name.endsWith('.pdf'))) {
-              if (file.name.endsWith('.pdf')) {
+            const title = file.name.split('.')[0]
+            if (file && (file.name.endsWith('.md') || file.name.endsWith('.txt') || file.name.endsWith('.json') || file.name.endsWith('.pdf') || file.name.endsWith('.docx'))) {
+              if (file.name.endsWith('.docx')) {
+                setOpen(true);
+                await onDocxToHtml(file)
+              } else if (file.name.endsWith('.pdf')) {
                 setOpen(true);
                 await onOpenPdf(file)
-                return;
-              }
-              await onSave()
-              onClearDocument();
-              const reader = new FileReader();
-              reader.onload = (e) => {
-                const title = file.name.split('.')[0]
-                if (file.name.endsWith('.json')) {
-                  try {
-                    const json = JSON.parse(e.target.result as string);
-                    const newTitle = json.title || ''
-                    if (json?.isEditor) {
-                      setLocalStorage('novel-title', newTitle)
-                      editorInstance.commands.setContent(json);
-                      const htmlContent = removeColgroupTags(highlightCodeblocks(editorInstance.getHTML()));
-                      const markdown = html2md(htmlContent)
-                      window.localStorage.setItem("novel-content", JSON.stringify(json));
-                      window.localStorage.setItem("markdown", markdown);
-                      window.localStorage.setItem("html-content", htmlContent);
-                      window.localStorage.setItem("txt-content", editorInstance.getText());
-                      dispatch(setGlobalState({ saveStatus: false, novelContent: json, markdown }))
-                    } else {
+              } else {
+                const reader = new FileReader();
+                reader.onload = async (e) => {
+                  if (file.name.endsWith('.json')) {
+                    try {
+                      const json = JSON.parse(e.target.result as string);
+                      const newTitle = json.title || ''
+                      if (json?.isEditor) {
+                        onClearDocument();
+                        setTimeout(() => {
+                          setLocalStorage('novel-title', newTitle)
+                          editorInstance.commands.setContent(json);
+                          const htmlContent = removeColgroupTags(highlightCodeblocks(editorInstance.getHTML()));
+                          const markdown = html2md(htmlContent)
+                          window.localStorage.setItem("novel-content", JSON.stringify(json));
+                          window.localStorage.setItem("markdown", markdown);
+                          window.localStorage.setItem("html-content", htmlContent);
+                          window.localStorage.setItem("txt-content", editorInstance.getText());
+                          dispatch(setGlobalState({ saveStatus: false, novelContent: json, markdown, novelTitle: newTitle }))
+                        }, 500)
+                      } else {
+                        toast({ description: t('is_document_error') })
+                      }
+                    } catch (error) {
                       toast({ description: t('is_document_error') })
                     }
-                  } catch (error) {
-                    toast({ description: t('is_document_error') })
+                  } else {
+                    onClearDocument();
+                    const tempData = e.target.result as string
+                    setTimeout(async () => {
+                      setLocalStorage('novel-title', title)
+                      const data = tempData.replace(
+                        /(\|[^\n]*\|[^\n]*\n)+/g,
+                        match => `\n${match}\n`
+                      )
+                      editorInstance.chain().focus().insertContentAt(1, data).run();
+                      dispatch(setGlobalState({ novelTitle: title }))
+                    }, 200)
                   }
-                } else {
-                  setLocalStorage('novel-title', title)
-                  editorInstance.chain().focus().insertContentAt(1, e.target.result).run();
-                }
-                window.localStorage.removeItem("novelTable");
-                window.localStorage.removeItem("novelSummary");
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                dispatch(setGlobalState({ novelTitle: title, rewriteDualScreen: false, translateDualScreen: false, novelTable: '', novelSummary: '', editorStatus: true }))
-              };
-              reader.readAsText(file);
+                };
+                reader.readAsText(file);
+              }
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
               toast({ description: t('is_document_error') })
             }
@@ -265,7 +304,6 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
       onClearDocument();
     }
   }
-
   const onOpenPdf = async (file: File) => {
     const formData = new FormData();
     formData.append('file', file)
@@ -295,17 +333,15 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
         })
         return;
       }
-      await onSave()
-      await onClearDocument();
-      window.localStorage.removeItem("novelTable");
-      window.localStorage.removeItem("novelSummary");
-      const title = file.name.split('.')[0]
-      setLocalStorage('novel-title', title)
-      const data = convertHtmlTablesToMarkdown(result.data)
-      editorInstance.chain().focus().insertContentAt(1, data).run();
-      dispatch(setGlobalState({ novelTitle: title, rewriteDualScreen: false, translateDualScreen: false, novelTable: '', novelSummary: '', editorStatus: true }))
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setOpen(false)
+      onClearDocument();
+      setTimeout(() => {
+        const title = file.name.split('.')[0]
+        setLocalStorage('novel-title', title)
+        const data = convertHtmlTablesToMarkdown(result.data)
+        editorInstance.chain().focus().insertContentAt(1, data).run();
+        dispatch(setGlobalState({ novelTitle: title }))
+        setOpen(false)
+      }, 500)
     } catch (error) {
       setOpen(false)
       if (error?.name === 'AbortError') return;
@@ -338,7 +374,7 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
             <DialogDescription />
           </DialogHeader>
           <div className="flex justify-center items-center gap-3" data-aria-hidden="true" aria-hidden="true">
-            {t('Reading_PDF')}
+            {t('Reading_doc')}
             <Loader2 className="animate-spin" style={{ width: 20, height: 20 }} />
           </div>
           <DialogFooter>
@@ -363,6 +399,9 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
               {actinFileMenu[key].map(item => {
                 if (item.value === 'Export') {
                   return (<ExportMenu language={global.language} key={item.value} />)
+                }
+                if (item.value === "Save as Image") {
+                  return (<MarkdownToPoster key={item.value} />)
                 }
                 return (
                   <Button

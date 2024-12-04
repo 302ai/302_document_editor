@@ -184,5 +184,22 @@
   "describe_tips": "Please enter a description",
   "Generate_illustrations_for_prompt_words": "Prompt word generation illustration",
   "AI_search_for_illustrations": "Search illustration",
-  "search": "Search"
+  "search": "Search",
+  "Export_error": "Export failed",
+  "Reading_doc": "Reading file content, please wait patiently",
+  "markdownToPoster": {
+    "Poster_download_failed": "Poster download failed"
+  },
+  "MarkdownToPoster": {
+    "download": "Download",
+    "signature": "Poster signature line",
+    "canvasSize": "canvas size",
+    "Margins": "Margin",
+    "LayoutTheme": "Typography theme",
+    "fontSize": "Font size",
+    "bg": "Background",
+    "Save_as_Image": "Save as picture"
+  },
+  "Save_as_Image": "Save as picture",
+  "open_docx": "Open failed"
 }
