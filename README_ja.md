@@ -2,7 +2,7 @@
 
 <p align="center">AIドキュメントエディターは、大規模言語モデルを利用してユーザーが長文の創作を行う際に支援し、Wordに似た編集体験を提供します。また、高品質なAIによる全文要約、全文翻訳、全文書き換え、全文朗読、インテリジェントな画像付け、長文を一括生成する機能を提供し、9種類のスタイル化されたドキュメントテンプレートを選択できるようにし、ドキュメントを多種多様なフォーマットでエクスポートすることもサポートしています。 </p>
 
-<p align="center"><a href="https://302.ai/tools/word/" target="blank"><img src="https://file.302ai.cn/gpt/imgs/github/302_badge.png" /></a></p >
+<p align="center"><a href="https://302.ai/ja/tools/word/" target="blank"><img src="https://file.302ai.cn/gpt/imgs/github/302_badge.png" /></a></p >
 
 <p align="center"><a href="README zh.md">中文</a> | <a href="README.md">English</a> | <a href="README_ja.md">日本語</a></p>
 
