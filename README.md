@@ -88,7 +88,7 @@ Internationalization: next-i18next <br>
 5. Build and deploy `docker build -t document-editor . && docker run -p 3000:3000 302_document-editor`
 
 ## ✨ About 302.AI ✨
-[302.AI](https://302.ai) is a pay-as-you-go AI application platform, solving the last mile problem of AI practical applications for users.
+[302.AI](https://302.ai) is an enterprise-oriented AI application platform that offers pay-as-you-go services, ready-to-use solutions, and an open-source ecosystem.✨
 1. 🧠 Combines the latest and most comprehensive AI capabilities and brands, including but not limited to language models, image models, voice models, and video models.
 2. 🚀 Develops deep applications on basic models - we develop real AI products, not just simple chatbots
 3. 💰 Zero monthly fee, all features are pay-per-use, fully open, achieving truly low barriers with high potential.
