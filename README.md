@@ -2,13 +2,13 @@
 
 <p align="center">The AI document editor utilizes large language models to assist users in long-text creation, offering an editing experience similar to that of Word. It provides high-quality AI functions such as full-text summarization, full-text translation, full-text rewriting, full-text reading aloud, intelligent image matching, and one-click generation of long texts. It also offers nine stylized document templates for selection and supports exporting documents in multiple formats. </p>
 
-<p align="center"><a href="https://302.ai/en/tools/word/" target="blank"><img src="https://file.302ai.cn/gpt/imgs/github/302_badge.png" /></a></p >
+<p align="center"><a href="https://302.ai/en/tools/word/" target="blank"><img src="https://file.302.ai/gpt/imgs/github/20250102/72a57c4263944b73bf521830878ae39a.png" /></a></p >
 
 <p align="center"><a href="README_zh.md">中文</a> | <a href="README.md">English</a> | <a href="README_ja.md">日本語</a></p>
 
 ![Interface Preview](docs/文档编辑器en.png) 
 
-This is the open-source version of [AI Document Editor](https://302.ai/en/tools/word/) from [302.AI](https://302.ai).
+This is the open-source version of [AI Document Editor](https://302.ai/en/tools/word/) from [302.AI](https://302.ai/en/).
 You can directly log in to 302.AI to use the online version with zero code and zero configuration.
 Or modify this project according to your needs, input 302.AI's API KEY, and deploy it yourself.
 
