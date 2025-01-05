@@ -36,8 +36,7 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
   const global = useAppSelector(selectGlobal);
   const [inputValue, setInputValue] = useState("");
   const [submitValue, setSubmitValue] = useState<{ value: string, params: any }>({ value: '', params: {} })
-  const [illustration, setIllustration] = useState('');
-  const [load, setLoad] = useState(false);
+  // const [illustration, setIllustration] = useState('');
   const dispatch = useAppDispatch()
 
   const { completion, complete, setCompletion, isLoading } = useCompletion({
@@ -69,35 +68,6 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
     },
   });
 
-  // const generateIllustration = async (content: string) => {
-  //   setLoad(true)
-  //   try {
-  //     const result: any = await ky('/api/generateIllustration', {
-  //       method: 'post',
-  //       timeout: false,
-  //       body: JSON.stringify({ content })
-  //     }).then(res => res.json())
-  //     if (result?.error) {
-  //       toast({
-  //         duration: 2000,
-  //         description: (ErrMessage(result?.error?.err_code, global.language))
-  //       })
-  //       setLoad(false)
-  //       return;
-  //     }
-  //     if (result?.data.length && result?.data[0]?.url) {
-  //       setIllustration(result.data[0].url)
-  //     }
-  //     setLoad(false)
-  //   } catch (error) {
-  //     toast({
-  //       duration: 2000,
-  //       description: (t('illustration_generation_failed'))
-  //     })
-  //     setLoad(false)
-  //   }
-  // }
-
   useEffect(() => {
     return () => {
       setCompletion("");
@@ -121,21 +91,6 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
   // replace
   const onReplace = () => {
     const selection = editor.view.state.selection;
-    if (illustration) {
-      editor
-        .chain()
-        .focus()
-        .insertContentAt(
-          {
-            from: selection.from,
-            to: selection.to,
-          },
-          `![Description of Image](${illustration})`
-        )
-        .run();
-      setIllustration('');
-      return;
-    }
     editor
       .chain()
       .focus()
@@ -152,15 +107,6 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
   // insert
   const InsertBelow = async () => {
     const selection = editor.view.state.selection;
-    if (illustration) {
-      editor
-        .chain()
-        .focus()
-        .insertContentAt(selection.to + 1, `![Description of Image](${illustration})`)
-        .run();
-      setIllustration('');
-      return;
-    }
     editor
       .chain()
       .focus()
@@ -170,11 +116,6 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
 
   // Regenerate
   const onRegenerate = async () => {
-    if (submitValue.params?.type === "illustration") {
-      setIllustration('');
-      // await generateIllustration(submitValue.value);
-      return;
-    }
     complete(submitValue.value, {
       body: { ...submitValue.params }
     }); // Call 'complete' to regenerate
@@ -186,21 +127,17 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
 
   return (
     <Command className="md:w-[450px] w-screen">
-      {(hasCompletion || illustration) && submitValue.params?.type !== 'reading aloud' && (
+      {hasCompletion && submitValue.params?.type !== 'reading aloud' && (
         <div className="flex max-h-[400px]">
-          {
-            illustration ?
-              <img src={illustration} alt="" /> :
-              <ScrollArea>
-                <div className="prose p-2 px-4 prose-sm">
-                  <Markdown>{completion}</Markdown>
-                </div>
-              </ScrollArea>
-          }
+          <ScrollArea>
+            <div className="prose p-2 px-4 prose-sm">
+              <Markdown>{completion}</Markdown>
+            </div>
+          </ScrollArea>
         </div>
       )}
 
-      {(isLoading || load) && (
+      {isLoading && (
         <div className="flex h-12 w-full items-center px-4 text-sm font-medium text-muted-foreground text-purple-500">
           <Magic className="mr-2 h-4 w-4 shrink-0  " />
           {t('AI_is_thinking')}
@@ -210,17 +147,16 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
         </div>
       )}
       {
-        !isLoading && !load && !hasCompletion && !illustration && submitValue.params?.type !== 'reading aloud' && (
+        !isLoading && !hasCompletion && submitValue.params?.type !== 'reading aloud' && (
           <AISelectorCommands onSelect={async (value, option) => {
-            if (option.type === 'illustration') {
-              // await generateIllustration(value);
+            if (['illustration', 'flow chart'].indexOf(option.type) > -1) {
               dispatch(setGlobalState({
-                selectRightMenu: 'IntelligentMapping',
+                selectRightMenu: option.type === 'flow chart' ? 'FlowChart' : 'IntelligentMapping',
               }))
               return;
             }
             setSubmitValue({ value, params: { ...option } })
-            if (['reading aloud', 'illustration'].indexOf(option.type) === -1) {
+            if (['reading aloud', 'illustration', 'flow chart'].indexOf(option.type) === -1) {
               complete(value, {
                 body: { ...option }
               })
@@ -229,7 +165,7 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
         )
       }
       {
-        !['reading aloud', 'illustration'].includes(submitValue.params?.type) && (
+        !['reading aloud', 'illustration', 'flow chart'].includes(submitValue.params?.type) && (
           <div className="relative">
             <CommandInput
               value={inputValue}
@@ -265,7 +201,7 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
         )
       }
       {
-        !isLoading && (hasCompletion || illustration) && (
+        !isLoading && hasCompletion && (
           <div className="flex justify-between ml-2 my-3">
             {
               submitValue?.params?.type !== 'free rewriting' && (
@@ -275,7 +211,7 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
             <div className={`${submitValue?.params?.type === 'free rewriting' && 'flex w-full justify-between'}`}>
               <Button size="sm" className={`text-sm mr-2`} onClick={onReplace}><LuReplace className="mr-2" />{t('replace')}</Button>
               <Button size="sm" className={`text-sm mr-2`} onClick={InsertBelow}><TbRowInsertBottom className="mr-2" />{t('insert')}</Button>
-              <Button size="sm" className={`text-sm mr-2 ${illustration && "hidden"}`} onClick={() => { onHandleCopyResult(completion) }}><FaRegCopy className="mr-2" />{t('copy_txt')}</Button>
+              <Button size="sm" className={`text-sm mr-2 `} onClick={() => { onHandleCopyResult(completion) }}><FaRegCopy className="mr-2" />{t('copy_txt')}</Button>
             </div>
           </div>
         )

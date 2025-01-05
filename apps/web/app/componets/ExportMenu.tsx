@@ -2,7 +2,6 @@ import { saveAs } from 'file-saver';
 import { CgExport } from "react-icons/cg";
 import { LuFileJson } from "react-icons/lu";
 import { FaRegFilePdf } from "react-icons/fa";
-import { asBlob } from 'html-docx-ts-improve';
 import { FaRegFileWord } from "react-icons/fa";
 import { GrDocumentTxt } from "react-icons/gr";
 import { BsFiletypeHtml } from "react-icons/bs";
@@ -16,13 +15,13 @@ import { ErrMessage } from './ErrMessage';
 import { selectGlobal } from '../store/globalSlice';
 import { useAppSelector } from '../store/hooks';
 import { useTranslations } from 'next-intl';
+import { convertMermaidToImage, convertMermaidToSvg } from '@/components/tailwind/mermaid/MermaidTool';
 
 interface IProps { language: 'chinese' | 'english' | 'japanese' }
 
 export function ExportMenu(props: IProps) {
   const t = useTranslations();
   const global = useAppSelector(selectGlobal);
-  const { language } = props;
   const exportMenuList: Array<{ value: string, label: string, type: string, icon: any }> = [
     { type: 'json', label: t('Structured_document_json'), value: 'Structured document (.json)', icon: (<LuFileJson />) },
     { type: 'docx', label: t('Word_docx'), value: 'Word (.docx)', icon: (<FaRegFileWord />) },
@@ -32,7 +31,7 @@ export function ExportMenu(props: IProps) {
     { type: 'html', label: t('HTML_htm'), value: 'HTML (.htm)', icon: (<BsFiletypeHtml />) },
   ]
 
-  const getHtml = (title: string) => {
+  const getHtml = async (title: string) => {
     let htmlContent = window.localStorage.getItem('html-content');
     if (!htmlContent) {
       onToast(t('not_export_content'))
@@ -74,17 +73,21 @@ export function ExportMenu(props: IProps) {
       table p {
         margin: 5px 0;
       }
+      img{
+        width:100%
+      }
     </style>`;
     const metaCharset = `<meta charset="UTF-8">`;
     htmlContent = htmlContent.replace(/<head[^>]*>/i, `$&${metaCharset}${tableStyles}`);
     htmlContent = htmlContent.replace(/<body[^>]*>((.|[\n\r])*)<\/body>/im, `<body>${newContent}${containerDiv}</body>`);
-    return htmlContent;
+    const html = await convertMermaidToSvg(htmlContent)
+    return html;
   }
 
   // Export HTML file
-  const exportHTML = () => {
+  const exportHTML = async () => {
     const title = window.localStorage.getItem('novel-title');
-    const htmlContent = getHtml(title);
+    const htmlContent = await getHtml(title);
     const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -188,14 +191,14 @@ export function ExportMenu(props: IProps) {
     try {
       const htmlContent = localStorage.getItem('html-content');
       const title = localStorage.getItem('novel-title');
-
+      const html = await convertMermaidToImage(htmlContent)
       const response = await fetch('/api/exportDocx', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          htmlContent,
+          htmlContent: html,
           title
         })
       });
@@ -221,7 +224,7 @@ export function ExportMenu(props: IProps) {
     const api_key = process.env.NEXT_PUBLIC_API_KEY;
     const fetchUrl = process.env.NEXT_PUBLIC_PDF_FETCH_URL;
     const title = window.localStorage.getItem('novel-title');
-    const htmlContent = getHtml(title);
+    const htmlContent = await getHtml(title);
     try {
       const resp = await ky.post(fetchUrl, {
         headers: {

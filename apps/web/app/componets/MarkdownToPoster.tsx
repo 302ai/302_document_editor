@@ -11,6 +11,7 @@ import { Switch } from "@/components/tailwind/ui/switch";
 import { toast } from "@/components/tailwind/ui/use-toast";
 import { useTranslations } from "next-intl";
 import { BsFiletypePng } from "react-icons/bs";
+import { convertMermaidToSvg } from "@/components/tailwind/mermaid/MermaidTool";
 
 const layoutThemeBase = `max-w-screen-2xl text-pretty prose prose-zinc prose-pre:text-balance prose-img:rounded-xl prose-img:w-full 
 prose-img:shadow-lg prose-lg font-sans prose-zinc text-zinc-800 prose-headings:text-zinc-800`;
@@ -62,7 +63,7 @@ export const MarkdownToPoster = () => {
   const markdownRef = useRef<any>(null);
   const resizableRef = useRef<any>(null);
   const signColorRef = useRef<any>(null);
-  const [markdown, setMarkdown] = useState('');
+  const [html, setHtml] = useState('');
   const [background, setBackground] = useState('bg-spring-gradient-wave')
   const [fontSize, setFontSize] = useState('!prose-base')
   const [margins, setMargins] = useState(4)
@@ -73,17 +74,14 @@ export const MarkdownToPoster = () => {
 
 
   useEffect(() => {
-    let markdownContent = window.localStorage.getItem('markdown');
-    const novelTitle = window.localStorage.getItem('novel-title');
-    if (markdownContent) {
-      markdownContent = novelTitle ? `# ${novelTitle}\n` + `${markdownContent}` : markdownContent;
-      markdownContent = markdownContent.replace(
-        /(\|[^\n]*\|[^\n]*\n)+/g,
-        match => `\n${match}\n`
-      )
-      setMarkdown(markdownContent)
-    }
+    onHandlingMarkdowns()
   }, [])
+
+  const onHandlingMarkdowns = async () => {
+    const htmlContent = window.localStorage.getItem('html-content');
+    const htmlText = await convertMermaidToSvg(htmlContent)
+    setHtml(htmlText)
+  }
 
   const onDownload = () => {
     setIsLoad(true)
@@ -114,7 +112,7 @@ export const MarkdownToPoster = () => {
           </div>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-max z-[9999999] h-[90%] overflow-hidden">
+      <DialogContent className="max-w-max z-[9999] h-[90%] overflow-hidden">
         <DialogHeader>
           <DialogTitle />
           <DialogDescription />
@@ -215,7 +213,7 @@ export const MarkdownToPoster = () => {
                   className={`${background} ${marginsList[margins]} bg-cover mx-auto w-full !max-w-max`}
                   copyFailedCallback={() => {
                     console.log('===========>>>>>>>>>下载失败');
-                    toast({ duration: 2000, description: t('markdownToPoster.Poster_download_failed') })
+                    toast({ duration: 2000, description: t('markdownToPoster.Poster_download_failed'), style: { zIndex: 99999 } })
                     setIsLoad(false)
                   }}
                   copySuccessCallback={() => {
@@ -226,7 +224,7 @@ export const MarkdownToPoster = () => {
                   <Md2PosterContent
                     className="rounded-xl break-words prose-table:w-full shadow-xl w-full bg-white/95 backdrop-blur-md p-8 flex flex-col justify-between gap-4"
                     articleClassName={`${fontSize} prose !max-w-max ${[layoutTheme.value]}`}>
-                    {markdown}
+                    {html}
                   </Md2PosterContent>
                   {sign.use && <div ref={signColorRef} className="py-4 text-center">{sign.txt}</div>}
                 </Md2Poster>

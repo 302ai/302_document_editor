@@ -183,7 +183,7 @@
   "website_tips": "请输入网址",
   "describe": "描述",
   "describe_tips": "请输入描述",
-  "Generate_illustrations_for_prompt_words": "提示词生成插图",
+  "Generate_illustrations_for_prompt_words": "生成插图",
   "AI_search_for_illustrations": "搜索插图",
   "search": "搜索",
   "Export_error": "导出失败",
@@ -202,5 +202,7 @@
     "Save_as_Image": "保存为图片"
   },
   "Save_as_Image": "保存为图片",
-  "open_docx": "打开失败"
+  "open_docx": "打开失败",
+  "Generate_FlowChart": "生成流程图",
+  "FlowChart": "流程图"
 }

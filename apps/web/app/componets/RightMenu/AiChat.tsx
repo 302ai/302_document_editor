@@ -11,10 +11,11 @@ import { useEffect, useRef, useState } from "react";
 import { selectGlobal, setGlobalState } from "@/app/store/globalSlice";
 import { Button } from "@/components/tailwind/ui/button";
 import { toast } from "@/components/tailwind/ui/use-toast";
-import { MdCleaningServices, MdSend } from "react-icons/md";
+import { MdCleaningServices, MdContentCopy, MdSend } from "react-icons/md";
 import { Textarea } from "@/components/tailwind/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/tailwind/ui/tooltip";
 import { useTranslations } from "next-intl";
+import { FaCircleUser } from "react-icons/fa6";
 
 export const AiChat = () => {
   const t = useTranslations();
@@ -41,6 +42,22 @@ export const AiChat = () => {
         selected: chatSelectText,
       }
     })
+  }
+
+  const onCopyText = (text: string) => {
+    if (text) {
+      navigator.clipboard.writeText(text).then(() => {
+        toast({
+          duration: 2000,
+          description: (t('copy_success'))
+        })
+      }, (err) => {
+        toast({
+          duration: 2000,
+          description: (t('copy_error'))
+        })
+      });
+    }
   }
 
   const { completion, complete, setCompletion, isLoading } = useCompletion({
@@ -140,12 +157,20 @@ export const AiChat = () => {
         {
           chatContent.map((item, index) => {
             return (
-              <div className={`flex py-2 w-full ${index !== (chatContent.length - 1) ? 'border-b' : ''}`} key={`${item.content}_${index}`}>
-                <div className="h-fit mr-3">
-                  {item.role === 'user' ? <FaRegUser className='text-lg' /> : <RiRobot2Line className='text-lg' />}
-                </div>
-                <div className={`text-sm rounded-sm p-2 w-full ${item.role === 'user' ? 'bg-[#ffffff]' : 'bg-[#f0efff]'}`}>
-                  <ReactMarkdown className="w-full ReactMarkdown break-words">{item.content}</ReactMarkdown>
+              <div className={`flex flex-col p-3 max-w-[85%] group  w-max ${item.role === 'user' && 'ml-auto'}`} key={item.uid} >
+                <div className={`flex gap-3`} >
+                  <img src="/logo-mini.png" className={`w-6 h-6 ${item.role === 'user' && 'hidden'}`} />
+                  <div >
+                    <div className='rounded-sm border p-3'>
+                      <div>
+                        <ReactMarkdown className="w-full ReactMarkdown break-words">{item.content}</ReactMarkdown>
+                      </div>
+                    </div>
+                    <div className='flex justify-end gap-3 mt-2 opacity-0 group-hover:opacity-100 transition-all'>
+                      <MdContentCopy className='text-sm text-[#8e47f0] cursor-pointer' onClick={() => onCopyText(item.content)} />
+                    </div>
+                  </div>
+                  <FaCircleUser className={`text-2xl ${item.role !== 'user' && 'hidden'}`} />
                 </div>
               </div>
             )

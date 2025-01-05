@@ -510,3 +510,7 @@ td {
 .sunsetGradientWave {
   background-image: url('../public/SunsetGradientWave.webp');
 }
+
+[id^="mermaid-"] p {
+  margin: 0 !important;
+}

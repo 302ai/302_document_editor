@@ -9,9 +9,12 @@ import type { EditorInstance } from "novel";
 import ky from "ky";
 import { toast } from "@/components/tailwind/ui/use-toast";
 import { ErrMessage } from "../ErrMessage";
-import { Loader2 } from "lucide-react";
+import { Edit, Loader2 } from "lucide-react";
 import { removeAIHighlight } from "novel/extensions";
 import { useTranslations } from "next-intl";
+import { MermaiEdit } from "@/components/tailwind/mermaid/MermaiEdit";
+import mermaid from "mermaid";
+import { formatMermaidToMarkdown } from "@/components/tailwind/mermaid/MermaidTool";
 
 const modelList = [
   'Flux-1.1-pro',
@@ -34,7 +37,6 @@ const IdeogramSize = [
   'ASPECT_1_3',
   'ASPECT_3_1',
 ]
-
 
 const fluxSize = [
   'auto',
@@ -61,19 +63,28 @@ export const IntelligentMapping = (props: { editorInstance: EditorInstance | nul
   const [searchType, setSearchType] = useState('Google')
   const [imageList, setImageList] = useState([]);
   const [tab, setTab] = useState(1)
+  const mermaidrRef = useRef<HTMLDivElement>(null);
+  const [mediumText, setMediumText] = useState('');
+
+  const TabList = [
+    { value: 1, label: t('Generate_illustrations_for_prompt_words') },
+    { value: 2, label: t('AI_search_for_illustrations') },
+    { value: 3, label: t('Generate_FlowChart') },
+  ]
 
   const generateIllustration = async () => {
     if (isload) return;
     setIsLoad(true);
+    const type = tab === 2 ? 'searchImage' : 'flow chart'
     try {
       const result: any = await ky('/api/generateIllustration', {
         method: 'post',
         timeout: false,
         body: JSON.stringify({
-          type: tab === 2 ? 'searchImage' : modelType,
+          type: tab === 1 ? modelType : type,
           size: imageSize,
-          searchType,
           content,
+          searchType,
         })
       }).then(res => res.json())
       if (result?.error) {
@@ -82,6 +93,13 @@ export const IntelligentMapping = (props: { editorInstance: EditorInstance | nul
           duration: 2000,
           description: (ErrMessage(result?.error?.err_code, global.language))
         })
+        return;
+      }
+      if (result?.output) {
+        const text = formatMermaidToMarkdown(result.output)
+        const mermaidContent = text.replace(/^[\s\S]*?```mermaid\s*\n?/, '').replace(/```[\s\S]*$/, '').trim();
+        setMediumText(mermaidContent)
+        setIsLoad(false);
         return;
       }
       if (result?.images) {
@@ -95,8 +113,6 @@ export const IntelligentMapping = (props: { editorInstance: EditorInstance | nul
       }
       setIsLoad(false);
     } catch (error) {
-      console.log('=============>>>>>>>>>', error);
-
       setIsLoad(false);
       toast({
         duration: 2000,
@@ -105,21 +121,28 @@ export const IntelligentMapping = (props: { editorInstance: EditorInstance | nul
     }
   }
 
-
   function isValidImageUrl(url) {
     const urlPattern = /^https?:\/\/.*\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i;
     return urlPattern.test(url);
   }
 
   const onInsert = () => {
+    let position = insertFrom.current || editorInstance.state.doc.content.size;
+    if (global.intelligentInsert) {
+      const cursorPos = global.intelligentInsert - 1;
+      const $pos = editorInstance.state.doc.resolve(cursorPos);
+      position = $pos.end();
+    }
     if (editorInstance) {
-      let position = insertFrom.current || editorInstance.state.doc.content.size;
-      if (global.intelligentInsert) {
-        const cursorPos = global.intelligentInsert - 1; // 当前指针位置
-        // 根据位置创建 ResolvedPos
-        const $pos = editorInstance.state.doc.resolve(cursorPos);
-        // 获取该位置所在块的结束位置
-        position = $pos.end();
+      if (tab === 3 && mediumText) {
+        const text = "```mermaid\n" +
+          `${mediumText}\n` +
+          "```"
+        editorInstance.chain().focus().insertContentAt(position, {
+          type: 'mermaid',
+          content: [{ type: 'text', text }],
+        }).run();
+        return;
       }
       editorInstance.chain().focus().insertContentAt(position, `![Description of Image](${illustration})`).run();
       removeAIHighlight(editorInstance)
@@ -159,6 +182,30 @@ export const IntelligentMapping = (props: { editorInstance: EditorInstance | nul
     }
   }, [editorInstance?.state])
 
+  useEffect(() => {
+    if (global.selectRightMenu === 'FlowChart') {
+      setTab(3)
+    }
+  }, [global.selectRightMenu])
+
+  useEffect(() => {
+    if (mermaidrRef.current && mediumText) {
+      mermaid.initialize({ startOnLoad: false, theme: 'default' });
+      mermaidrRef.current.innerHTML = mediumText;
+      if (mediumText) {
+        mermaid.parse(mediumText).then(res => {
+          mermaid?.render(`mermaid-${Date.now()}`, mediumText)?.then(({ svg }) => {
+            mermaidrRef.current.innerHTML = svg;
+          }).catch((error) => {
+            console.log('======>>error', error);
+          });
+        }).catch((error) => {
+          console.log('======>>error', error);
+        })
+      }
+    }
+  }, [mediumText, mermaidrRef.current]);
+
   return (
     <div className="w-[450px] h-full border-l p-3 flex flex-col gap-5">
       <div className="flex justify-between items-center">
@@ -168,18 +215,17 @@ export const IntelligentMapping = (props: { editorInstance: EditorInstance | nul
         </Button>
       </div>
       <div className="border p-[3px] rounded-md flex">
-        <div
-          onClick={() => setTab(1)}
-          className={`flex justify-center items-center text-center cursor-pointer w-full rounded-md text-sm py-2 ${tab === 1 && "bg-[#8e47f0] text-white"}`}
-        >
-          {t('Generate_illustrations_for_prompt_words')}
-        </div>
-        <div
-          onClick={() => setTab(2)}
-          className={`flex justify-center items-center text-center cursor-pointer w-full rounded-md text-sm py-2 ${tab === 2 && "bg-[#8e47f0] text-white"}`}
-        >
-          {t('AI_search_for_illustrations')}
-        </div>
+        {
+          TabList.map(item => (
+            <div
+              key={item.value}
+              onClick={() => setTab(item.value)}
+              className={`flex justify-center items-center text-center cursor-pointer w-full rounded-md text-sm py-2 ${tab === item.value && "bg-[#8e47f0] text-white"}`}
+            >
+              {item.label}
+            </div>
+          ))
+        }
       </div>
       <div>
         <Textarea
@@ -187,45 +233,39 @@ export const IntelligentMapping = (props: { editorInstance: EditorInstance | nul
           onChange={(e) => { setContent(e.target.value) }}
           placeholder={t('Enter_your_description')}
         />
-        {
-          tab === 1 ?
-            <div className="mt-5 flex justify-between items-center gap-3" >
-              <Select onValueChange={(value) => { setModelType(value); setImageSize('auto') }} value={modelType}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="z-[99999]">
-                  <SelectGroup>
-                    {modelList.map(key => (<SelectItem key={key} value={key}>{key}</SelectItem>))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {SelectModule(modelType)}
-              <Button onClick={generateIllustration} disabled={content.trim().length < 1}>
-                {isload ?
-                  <Loader2 className="animate-spin" style={{ width: 20, height: 20 }} /> : t('Generate')
-                }
-              </Button>
-            </div> :
-            <div className="mt-5 flex justify-between items-center gap-3">
-              <Select onValueChange={(value) => { setSearchType(value) }} value={searchType}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="z-[99999]">
-                  <SelectGroup>
-                    {searchTypeList.map(key => (<SelectItem key={key} value={key}>{key}</SelectItem>))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Button onClick={generateIllustration} disabled={content.trim().length < 1}>
-                {isload ?
-                  <Loader2 className="animate-spin" style={{ width: 20, height: 20 }} /> :
-                  t('search')
-                }
-              </Button>
-            </div>
-        }
+        <div className={`flex items-center gap-3 mt-5 w-full ${tab === 3 ? 'justify-end' : 'justify-between'} `}>
+          <div className={`justify-between items-center gap-3 ${tab === 1 ? 'flex' : 'hidden'}`} >
+            <Select onValueChange={(value) => { setModelType(value); setImageSize('auto') }} value={modelType}>
+              <SelectTrigger className="w-[160px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="z-[99999]">
+                <SelectGroup>
+                  {modelList.map(key => (<SelectItem key={key} value={key}>{key}</SelectItem>))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {SelectModule(modelType)}
+          </div>
+          <div className={`${tab === 2 ? 'flex' : 'hidden'}`}>
+            <Select onValueChange={(value) => { setSearchType(value) }} value={searchType}>
+              <SelectTrigger className="w-[160px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="z-[99999]">
+                <SelectGroup>
+                  {searchTypeList.map(key => (<SelectItem key={key} value={key}>{key}</SelectItem>))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <Button onClick={generateIllustration} disabled={content.trim().length < 1}>
+            {isload ?
+              <Loader2 className="animate-spin" style={{ width: 20, height: 20 }} /> :
+              tab === 2 ? t('search') : t('Generate')
+            }
+          </Button>
+        </div>
       </div>
       {(tab === 2 && imageList.length > 0) &&
         <div className="border rounded-sm h-[120px] w-full p-2 flex gap-2 custom-scrollbar">
@@ -237,10 +277,21 @@ export const IntelligentMapping = (props: { editorInstance: EditorInstance | nul
         </div>
       }
       <div className="text-right">
-        <div className="h-60 w-full border mb-5">
-          {illustration && <img src={illustration} className="h-full w-full object-contain" />}
+        <div className="h-60 w-full border mb-5 relative">
+          <div className={`${(tab === 3 && mediumText) ? 'block' : 'hidden'} h-60`}>
+            <div className={`absolute right-3 top-1 bg-white w-[30px] h-[30px] p-[6px] ${!mediumText && 'hidden'}`}>
+              <MermaiEdit
+                editor={editorInstance}
+                initialText={mediumText}
+                onCallback={(text: string) => { setMediumText(text) }}
+                buttonIcon={<Edit className="h-5 w-5 text-lg text-[#8e47f0]" />}
+              />
+            </div>
+            <div className={`border overflow-auto w-full h-full custom-scrollbar`} ref={mermaidrRef} id="mermaid" />
+          </div>
+          {illustration && <img src={illustration} className="h-full w-full object-contain cursor-pointer" />}
         </div>
-        <Button disabled={!illustration || isload} onClick={onInsert}>
+        <Button disabled={isload || (tab == 3 && !mediumText) || (tab !== 3 && !illustration)} onClick={onInsert}>
           {t('insert')}
         </Button>
       </div>

@@ -25,7 +25,7 @@ export const RightMenu = (props: { editorInstance: EditorInstance | null }) => {
     <div className={`z-[9998] bg-background sticky top-[48px] flex justify-between`} style={{ height: 'calc(100vh - 48px)' }}>
       {global.selectRightMenu === 'FullTextSummary' && <FullTextSummary />}
       {global.selectRightMenu === 'AiChat' && <AiChat />}
-      {global.selectRightMenu === 'IntelligentMapping' && <IntelligentMapping editorInstance={editorInstance} />}
+      {['FlowChart', 'IntelligentMapping'].indexOf(global.selectRightMenu) > -1 && <IntelligentMapping editorInstance={editorInstance} />}
 
       <div className={`w-[70px] h-full flex flex-col items-center gap-7 px-2 py-4  border-l`}>
         <div className="flex flex-col justify-center items-center gap-2 cursor-pointer group" onClick={() => onClickMenu('FullTextSummary')}>

@@ -287,6 +287,49 @@ Output language must be same as the writing instruction.`
     ]
   },
 
+  // Process diagram generation
+  'flow chart': (params: Pick<IToolParameter, 'content'>) => {
+    return [
+      {
+        role: 'system',
+        content: `Your task is to create a flowchart using Mermaid syntax based on the content.
+  requirement:
+  -Supports multiple types of charts, including flowcharts, sequence diagrams, Gantt charts, class diagrams, state diagrams, and entity relationship diagrams.
+  -Use Mermaid format to output flowchart code for secondary editing in the later stage.
+  
+  This is an excellent example:
+  Content provided:
+  The class diagram defines three classes: "animals," "cats," and "dogs. The "animal" class has two properties: "name" (type String) and "age" (type int), and a method called "move". The "cat" class has a property "breed" (type String) and a method "catch mouse". The 'dog' class also has a property 'breed' (of type String) and a method 'watch'. Both the "cat" class and the "dog" class inherit from the "animal" class, and their inheritance relationship is represented by "-- |>".
+  
+  Output result:
+  classDiagram
+  Class animals{
+  +Name: String
+  +Age: int
+  +Mobile ()
+  }
+  Class Cat{
+  +Variety: String
+  +Catch mice ()
+  }
+  Class dog{
+  +Variety: String
+  +Watch the house ()
+  }
+  Cats - |>Animals
+  Dogs - |>Animals
+  
+  User messages will provide you with context, and you should process tasks based on this information.
+  Directly output mermaid code without adding any additional content.`,
+      },
+      {
+        role: 'user',
+        content: params.content
+      }
+    ]
+  }
+
+
 }
 
 

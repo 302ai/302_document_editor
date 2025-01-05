@@ -183,7 +183,7 @@
   "website_tips": "URLを入力してください",
   "describe": "説明する",
   "describe_tips": "説明を入力してください",
-  "Generate_illustrations_for_prompt_words": "プロンプト単語生成の図",
+  "Generate_illustrations_for_prompt_words": "イラストの生成",
   "AI_search_for_illustrations": "検索イラスト",
   "search": "検索",
   "Export_error": "エクスポートに失敗しました",
@@ -202,5 +202,7 @@
     "Save_as_Image": "画像として保存"
   },
   "Save_as_Image": "画像として保存",
-  "open_docx": "オープンに失敗しました"
+  "open_docx": "オープンに失敗しました",
+  "Generate_FlowChart": "フローチャートの生成",
+  "FlowChart": "フローチャート"
 }

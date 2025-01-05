@@ -33,5 +33,6 @@
     "apps/web/locales",
     "apps/web/app/i18n"
   ],
-  "i18n-ally.keystyle": "nested"
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sourceLanguage": "zh"
 }

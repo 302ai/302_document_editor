@@ -27,6 +27,7 @@ import { MdOutlineSaveAlt } from "react-icons/md";
 import { CgExport } from "react-icons/cg";
 import { MarkdownToPoster } from "../../MarkdownToPoster";
 import { BsFiletypePng } from "react-icons/bs";
+import { MdToJson } from "@/lib/MdToJson";
 
 interface IData {
   id: number;
@@ -50,7 +51,7 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
 
   const actinFileMenu: { [key: string]: Array<{ lable: string, value: string, icon: any, }> } = {
     'file': [
-      { lable: 'NewFile', value: 'New file', icon: (<FiFile />) },
+      { lable: t('NewFile'), value: 'New file', icon: (<FiFile />) },
       { lable: t('OpenLocalDocument'), value: 'Open local document', icon: (<LuFileUp />) },
       { lable: t('CreateACopy'), value: 'Create a copy', icon: (<FiFilePlus />) },
 
@@ -138,7 +139,7 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
   }
 
   // Clear the entire document
-  const onClearDocument = () => {
+  const onClearDocument = async () => {
     window.localStorage.removeItem("novel-id");
     window.localStorage.removeItem("markdown");
     window.localStorage.removeItem("novel-title");
@@ -211,7 +212,7 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
     try {
       const html = await docxToHtml(file)
       if (html) {
-        onClearDocument();
+        await onClearDocument();
         setTimeout(() => {
           const title = file.name.split('.')[0]
           const htmlContent = removeColgroupTags(highlightCodeblocks(html));
@@ -252,42 +253,30 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
                 await onOpenPdf(file)
               } else {
                 const reader = new FileReader();
+                let json: JSONContent = {}
                 reader.onload = async (e) => {
-                  if (file.name.endsWith('.json')) {
-                    try {
-                      const json = JSON.parse(e.target.result as string);
-                      const newTitle = json.title || ''
-                      if (json?.isEditor) {
-                        onClearDocument();
-                        setTimeout(() => {
-                          setLocalStorage('novel-title', newTitle)
-                          editorInstance.commands.setContent(json);
-                          const htmlContent = removeColgroupTags(highlightCodeblocks(editorInstance.getHTML()));
-                          const markdown = html2md(htmlContent)
-                          window.localStorage.setItem("novel-content", JSON.stringify(json));
-                          window.localStorage.setItem("markdown", markdown);
-                          window.localStorage.setItem("html-content", htmlContent);
-                          window.localStorage.setItem("txt-content", editorInstance.getText());
-                          dispatch(setGlobalState({ saveStatus: false, novelContent: json, markdown, novelTitle: newTitle }))
-                        }, 500)
+                  try {
+                    if (file.name.endsWith('.json')) {
+                      const tempJson = JSON.parse(e.target.result as string);
+                      if (tempJson?.isEditor) {
+                        json = tempJson;
                       } else {
                         toast({ description: t('is_document_error') })
                       }
-                    } catch (error) {
-                      toast({ description: t('is_document_error') })
+                    } else {
+                      const tempData = e.target.result as string
+                      const data = tempData.replace(/(\|[^\n]*\|[^\n]*\n)+/g, match => `\n${match}\n`)
+                      json = MdToJson(data)
                     }
-                  } else {
-                    onClearDocument();
-                    const tempData = e.target.result as string
-                    setTimeout(async () => {
+                    if (Object.keys(json).length > 0) {
+                      await onClearDocument();
+                      editorInstance.commands.setContent(json);
+                      editorInstance.chain().focus('end')
                       setLocalStorage('novel-title', title)
-                      const data = tempData.replace(
-                        /(\|[^\n]*\|[^\n]*\n)+/g,
-                        match => `\n${match}\n`
-                      )
-                      editorInstance.chain().focus().insertContentAt(1, data).run();
                       dispatch(setGlobalState({ novelTitle: title }))
-                    }, 200)
+                    }
+                  } catch (error) {
+                    toast({ description: t('is_document_error') })
                   }
                 };
                 reader.readAsText(file);
@@ -304,6 +293,7 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
       onClearDocument();
     }
   }
+
   const onOpenPdf = async (file: File) => {
     const formData = new FormData();
     formData.append('file', file)
@@ -333,7 +323,7 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
         })
         return;
       }
-      onClearDocument();
+      await onClearDocument();
       setTimeout(() => {
         const title = file.name.split('.')[0]
         setLocalStorage('novel-title', title)
@@ -435,7 +425,7 @@ export const DocumentTab = (props: { editorInstance: EditorInstance | null }) =>
                   >
                     <div className="flex items-center">
                       {item?.icon}
-                      <span className="ml-2">{t(item.lable)}</span>
+                      <span className="ml-2">{item.lable}</span>
                     </div>
                   </Button>
                 )

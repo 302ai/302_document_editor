@@ -30,7 +30,7 @@ interface GlobalStateProps {
   chatSelectText: string; // Editor content selected in the chat room
   illustrationStatus: boolean; // Open Generate Illustration
   settings: { hideBrand: boolean }, // Configure hidden brand information
-  selectRightMenu: '' | 'AiChat' | 'IntelligentMapping' | 'FullTextSummary' | 'InformationSearch'; // Select the menu bar on the right
+  selectRightMenu: '' | 'AiChat' | 'IntelligentMapping' | 'FullTextSummary' | 'InformationSearch' | 'FlowChart'; // Select the menu bar on the right
   informationCreationStatus: boolean, // Enter the state of information creation
   informationGenerationStatus: boolean, // Information creation generation status
   informationUrl: string[]; // URL selection for information creation

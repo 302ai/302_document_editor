@@ -16,6 +16,7 @@ export const QUICK_INSERT_MENU = (t) => {
     return {
         'AI': { name: t('AI'), shortcutKeys: '/a', },
         'Generate illustrations': { name: t('Generate_illustrations'), shortcutKeys: '/il' },
+        'FlowChart': { name: t('FlowChart'), shortcutKeys: '/f' },
         'Text': { name: t('Text'), shortcutKeys: '/c', },
         'Heading 1': { name: t('Heading_1'), shortcutKeys: '/t', },
         'Heading 2': { name: t('Heading_2'), shortcutKeys: '/tt', },

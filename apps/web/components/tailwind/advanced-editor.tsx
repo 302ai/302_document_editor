@@ -39,8 +39,10 @@ import html2md from 'html-to-md'
 import CustomPlugin from '@/lib/CustomPlugin';
 import { useCompletion } from 'ai/react';
 import { useTranslations } from 'next-intl';
+import { MermaidExtension } from './mermaid/MermaidExtension';
+import { MermaidMenu } from './mermaid/MermaidMenu';
 
-const extensions = [...defaultExtensions, slashCommand, Highlight.configure({ multicolor: true })];
+const extensions = [...defaultExtensions, MermaidExtension, slashCommand, Highlight.configure({ multicolor: true })];
 
 interface IProps { className: string, language: 'chinese' | 'english' | 'japanese', onEditorCreate }
 
@@ -162,37 +164,6 @@ const TailwindAdvancedEditor = (props: IProps) => {
       }
     },
   });
-
-  // Generate illustrations
-  // const generateIllustration = async () => {
-  //   try {
-  //     const result: any = await ky('/api/generateIllustration', {
-  //       method: 'post',
-  //       timeout: false,
-  //       body: JSON.stringify({
-  //         type: "Ideogram 2.0",
-  //         content: quickInsertion.request,
-  //       })
-  //     }).then(res => res.json())
-  //     if (result?.error) {
-  //       toast({
-  //         duration: 2000,
-  //         description: (ErrMessage(result?.error?.err_code, global.language))
-  //       })
-  //       setOpenAiQuickInsertion((v) => ({ ...v, isLoad: false }))
-  //       return;
-  //     }
-  //     if (result?.data.length && result?.data[0]?.url) {
-  //       setIllustration(result.data[0].url)
-  //     }
-  //   } catch (error) {
-  //     toast({
-  //       duration: 2000,
-  //       description: (t('illustration_generation_failed'))
-  //     })
-  //   }
-  //   setOpenAiQuickInsertion((v) => ({ ...v, isLoad: false }))
-  // }
 
   const ReplaceQuicklyGeneratedData = () => {
     if (illustration) {
@@ -484,6 +455,7 @@ const TailwindAdvancedEditor = (props: IProps) => {
         </div>
 
         <TableMenu editor={editorInstance} />
+        <MermaidMenu editor={editorInstance} />
         <EditorContent
           initialContent={initialContent}
           ref={editorRef}
@@ -549,13 +521,13 @@ const TailwindAdvancedEditor = (props: IProps) => {
                       if (["AI"].includes(item.title)) {
                         setOpenAiQuickInsertion((v) => ({ ...v, open: true, title: item.title }));
                       }
-                      if (item.title === "Generate illustrations") {
+                      if (["Generate illustrations", 'FlowChart'].indexOf(item.title) > -1) {
                         const state = editorInstance.view.state;
                         const selection = state.selection;
                         // 获取当前选区的锚点位置
                         const anchorPos = selection.anchor;
                         dispatch(setGlobalState({
-                          selectRightMenu: 'IntelligentMapping',
+                          selectRightMenu: item.title === 'FlowChart' ? 'FlowChart' : 'IntelligentMapping',
                           intelligentInsert: anchorPos
                         }))
                       }

@@ -20,6 +20,7 @@ import { Command, renderItems } from "novel/extensions";
 import { uploadFn } from "./image-upload";
 import { PiMagicWandFill } from "react-icons/pi";
 import { TbChartAreaLine } from "react-icons/tb";
+import { FcFlowChart } from "react-icons/fc";
 
 export const suggestionItems = createSuggestionItems([
   {
@@ -36,6 +37,15 @@ export const suggestionItems = createSuggestionItems([
     description: "Just start typing with plain text.",
     searchTerms: ['il'],
     icon: <TbChartAreaLine className="text-[18px]" />,
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).run();
+    },
+  },
+  {
+    title: "FlowChart",
+    description: "flow chart",
+    searchTerms: ["f"],
+    icon: <FcFlowChart className="text-slate-800" size={18} />,
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).run();
     },

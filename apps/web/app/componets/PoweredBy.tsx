@@ -1,6 +1,7 @@
 "use client";
 import { selectGlobal } from "@/app/store/globalSlice"
 import { useAppSelector } from "@/app/store/hooks"
+import { getHref } from "@/lib/utils";
 
 export default function PoweredBy({ language }: { language: 'chinese' | 'english' | 'japanese' }) {
     const global = useAppSelector(selectGlobal)
@@ -14,7 +15,7 @@ export default function PoweredBy({ language }: { language: 'chinese' | 'english
         </div>
         <div className="flex justify-center items-center gap-1">
             Powered By
-            <a target="_blank" href={global.region ? "https://302.ai/" : "https://302ai.cn/"}><img className="object-contain" src="https://file.302.ai/gpt/imgs/91f7b86c2cf921f61e8cf9dc7b1ec5ee.png" alt="gpt302" width="55" /></a>
+            <a target="_blank" href={getHref}><img className="object-contain" src="https://file.302.ai/gpt/imgs/91f7b86c2cf921f61e8cf9dc7b1ec5ee.png" alt="gpt302" width="55" /></a>
         </div>
     </div >
 }

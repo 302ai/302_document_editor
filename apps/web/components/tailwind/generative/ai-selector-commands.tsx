@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { TbChartAreaLine } from "react-icons/tb";
 import { useTranslations } from "next-intl";
+import { FcFlowChart } from "react-icons/fc";
 
 interface AISelectorCommandsProps {
   onSelect: (value: string, option: { type: string, language?: string }) => void;
@@ -61,6 +62,11 @@ const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
       value: "illustration",
       label: t("Illustration"),
       icon: <TbChartAreaLine className="h-4 w-4 text-purple-500" />,
+    },
+    {
+      value: "flow chart",
+      label: t('FlowChart'),
+      icon: <FcFlowChart className="h-4 w-4 text-purple-500" />,
     },
   ];
 

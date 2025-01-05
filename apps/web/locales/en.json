@@ -182,7 +182,7 @@
   "website_tips": "Please enter the URL",
   "describe": "Describe",
   "describe_tips": "Please enter a description",
-  "Generate_illustrations_for_prompt_words": "Prompt word generation illustration",
+  "Generate_illustrations_for_prompt_words": "Generate illustrations",
   "AI_search_for_illustrations": "Search illustration",
   "search": "Search",
   "Export_error": "Export failed",
@@ -201,5 +201,8 @@
     "Save_as_Image": "Save as picture"
   },
   "Save_as_Image": "Save as picture",
-  "open_docx": "Open failed"
+  "open_docx": "Open failed",
+  "Create_copy": "",
+  "Generate_FlowChart": "Generate flowchart",
+  "FlowChart": "flow chart"
 }
