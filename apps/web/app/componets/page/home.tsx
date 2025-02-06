@@ -84,8 +84,6 @@ export default function Page() {
       }
     }
     if (initialContent) {
-      const isH1 = initialContent.some((o: JSONContent) => o.attrs.level === 1)
-      const isH2 = initialContent.some((o: JSONContent) => o.attrs.level === 2)
       return initialContent.map((item: JSONContent, index) => {
         return (
           <div
@@ -94,8 +92,10 @@ export default function Page() {
             className={
               `cursor-pointer hover:text-[#8e47f0]
                hover:bg-[#f1f5f9] py-1 text-sm
-               ${item.attrs.level === 2 && isH1 && 'ml-3'}
-               ${item.attrs.level === 3 && isH2 && 'ml-6'}
+               ${item.attrs.level === 2 && 'ml-3'}
+               ${item.attrs.level === 3 && 'ml-6'}
+               ${item.attrs.level === 4 && 'ml-9'}
+               ${item.attrs.level === 5 && 'ml-12'}
                `
             }
           >

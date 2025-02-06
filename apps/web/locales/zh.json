@@ -204,5 +204,19 @@
   "Save_as_Image": "保存为图片",
   "open_docx": "打开失败",
   "Generate_FlowChart": "生成流程图",
-  "FlowChart": "流程图"
+  "FlowChart": "流程图",
+  "customLongArticle": "自定义长文",
+  "customRequirements": "请输入对长文的自定义要求，若无填写，则按照预设生成大纲",
+  "needIllustrations": "需要插图",
+  "pictureSource": "图片来源",
+  "longArticleOutline": "长文大纲",
+  "content": "内容",
+  "picture": "图片",
+  "generateOutline": "生成大纲",
+  "generateLongArticle": "生成长文",
+  "regenerateOutline": "重新生成大纲",
+  "confirm": "确定",
+  "aiGenerated": "AI生成",
+  "ImageSearch": "图片搜索",
+  "ImageSearchPriority": "图片搜索优先"
 }

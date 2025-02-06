@@ -207,7 +207,7 @@ export const IntelligentMapping = (props: { editorInstance: EditorInstance | nul
   }, [mediumText, mermaidrRef.current]);
 
   return (
-    <div className="w-[450px] h-full border-l p-3 flex flex-col gap-5">
+    <div className="w-[450px] h-full border-l p-3 flex flex-col gap-5 custom-scrollbar">
       <div className="flex justify-between items-center">
         <h3>{t('intelligent_mapping')}</h3>
         <Button variant="ghost" onClick={() => dispatch(setGlobalState({ selectRightMenu: '' }))}>

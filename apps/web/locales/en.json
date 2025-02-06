@@ -204,5 +204,19 @@
   "open_docx": "Open failed",
   "Create_copy": "",
   "Generate_FlowChart": "Generate flowchart",
-  "FlowChart": "flow chart"
+  "FlowChart": "flow chart",
+  "customLongArticle": "Custom long text",
+  "customRequirements": "Please enter custom requirements for long articles. If you do not fill in it, generate an outline according to the preset",
+  "needIllustrations": "Need illustrations",
+  "pictureSource": "Image source",
+  "longArticleOutline": "Long article outline",
+  "content": "Content",
+  "picture": "Picture",
+  "generateOutline": "Generate an outline",
+  "generateLongArticle": "Generate a long text",
+  "regenerateOutline": "Regenerate outline",
+  "confirm": "Sure",
+  "aiGenerated": "AI generation",
+  "ImageSearch": "Image search",
+  "ImageSearchPriority": "Image search priority"
 }

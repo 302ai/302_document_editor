@@ -2,7 +2,6 @@
 
 const hljs = require('highlight.js');
 
-import ky from 'ky';
 import dayjs from 'dayjs';
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -121,23 +120,6 @@ const TailwindAdvancedEditor = (props: IProps) => {
         params: {
           title: global.novelTitle,
           request: quickInsertion.request
-        },
-      }
-    })
-  }
-
-  const onGenerateLengthyArticle = async (type: 'Ultra long writing' | 'Ultra long writing next') => {
-    const title = global.novelTitle;
-    generateTarget.current = type;
-    const { plan, written, sections } = generateLongParams.current;
-    const next = sections.shift()
-    complete(title, {
-      body: {
-        type,
-        params: {
-          plan,
-          written,
-          next: next,
         },
       }
     })
@@ -338,15 +320,6 @@ const TailwindAdvancedEditor = (props: IProps) => {
 
   }, [editorInstance])
 
-  // useEffect(() => {
-  //   if (global.illustrationStatus) {
-  //     setOpenAiQuickInsertion((v) => ({ ...v, open: true, title: "Generate illustrations" }));
-  //   } else {
-  //     setOpenAiQuickInsertion({ open: false, title: '', isLoad: false })
-  //     dispatch(setGlobalState({ illustrationStatus: false }))
-  //   }
-  // }, [global.illustrationStatus])
-
   useEffect(() => {
     if (completion && !completion?.endsWith('-') && isLoading) {
       if (generateTarget.current === 'quick insertion') {
@@ -359,9 +332,6 @@ const TailwindAdvancedEditor = (props: IProps) => {
       if (generateTarget.current === 'generate content' || generateTarget.current === 'Ultra long writing next') {
         let data = completion
         try {
-          if (generateTarget.current === 'Ultra long writing next') {
-            data = generateLongParams.current.written + '\n' + completion
-          }
           const endPosition = editorInstance.state.doc.content.size;
           editorInstance.chain().focus().insertContentAt({ from: 0, to: endPosition }, data).run();
           window.scrollTo({
@@ -378,24 +348,6 @@ const TailwindAdvancedEditor = (props: IProps) => {
       if (generateTarget.current === 'generate title') {
         window.localStorage.setItem("novel-title", completion.replace(/^#/, ""));
       }
-      if (generateTarget.current === 'Ultra long writing') {
-        const normalizedString = JSON.stringify(completion).replace(/\\n/g, '\n').replace(/\\|"/g, '');
-        const outline = normalizedString.split('\n').filter(f => f.length);
-        generateLongParams.current = { plan: completion, written: '', sections: outline }
-        onGenerateLengthyArticle('Ultra long writing next')
-        setCompletion('');
-        return;
-      }
-      if (generateTarget.current === 'Ultra long writing next') {
-        if (generateLongParams.current.sections.length) {
-          generateLongParams.current.written += "\n" + completion
-          onGenerateLengthyArticle('Ultra long writing next')
-          setCompletion('');
-          return;
-        } else {
-          dispatch(setGlobalState({ longArticleGenerationStatus: false }))
-        }
-      }
       toast({
         duration: 2000,
         description: (t('editor_ai_writing_completed'))
@@ -403,19 +355,6 @@ const TailwindAdvancedEditor = (props: IProps) => {
       setCompletion('');
     }
   }, [completion, isLoading, generateTarget.current])
-
-  useEffect(() => {
-    if (global.longArticleGenerationStatus) {
-      const title = global.novelTitle;
-      generateTarget.current = 'Ultra long writing';
-      complete(title, {
-        body: {
-          type: 'Ultra long writing',
-          isStream: false,
-        }
-      })
-    }
-  }, [global.longArticleGenerationStatus])
 
   if (!initialContent) return null;
   return (

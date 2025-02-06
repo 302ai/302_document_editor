@@ -2,19 +2,18 @@ import { selectGlobal, setGlobalState } from "@/app/store/globalSlice";
 import { useAppDispatch, useAppSelector } from "@/app/store/hooks";
 import { Button } from "@/components/tailwind/ui/button";
 import { Input } from "@/components/tailwind/ui/input";
-import { Loader2 } from "lucide-react";
 import type { EditorInstance } from "novel";
 import { MdFiberNew, MdSend } from "react-icons/md";
 import { FullTextTranslationMenu } from "../../FullTextTranslationMenu";
 import { getLocalStorage } from "@/lib/utils";
 import { toast } from "@/components/tailwind/ui/use-toast";
-import { ToastAction } from "@/components/tailwind/ui/toast";
 import { useTranslations } from "next-intl";
 import { RiCameraLensLine, RiRobot2Line, RiSpeakLine } from "react-icons/ri";
 import { BsTranslate } from "react-icons/bs";
 import { FiRefreshCw } from "react-icons/fi";
 import { FaFeather } from "react-icons/fa";
 import { TbChartAreaLine } from "react-icons/tb";
+import { LongEssay } from "./LongEssay";
 export const AiTab = (props: {
   editorInstance: EditorInstance | null,
   onOpenAudioPlayer: () => void;
@@ -34,47 +33,15 @@ export const AiTab = (props: {
     { label: t('OneClickGenerationOfLongArticles'), value: 'One click generation of long articles', icon: (<FaFeather className="text-[#8e47f0]" />) },
   ]
 
-  const GenerateLongContent = () => {
-    const title = global.novelTitle;
-    const text = editorInstance.getText();
-    const onRequest = async () => {
-      toast({
-        duration: Infinity,
-        description: <div className='flex items-center'>
-          <span>{t('AI_is_thinking')}</span>
-          <Loader2 className="animate-spin ml-3 text-[#8e47f0]" style={{ width: 20, height: 20 }} />
-        </div>,
-        action: (<ToastAction altText="Goto schedule to undo" className="hidden" ></ToastAction>),
-      })
-      dispatch(setGlobalState({ longArticleGenerationStatus: true }))
-    }
-
-    if (title.trim().length < 1) {
-      toast({
-        duration: 2000,
-        description: t('Please_enter_the_title_first')
-      })
-      return;
-    }
-    if (text.trim().length > 0) {
-      toast({
-        title: "",
-        description: <div className='text-red-600'>{t('do_you_want_to_continue')}</div>,
-        action: (
-          <ToastAction altText="Goto schedule to undo" onClick={() => { onRequest() }}>{t('Confirm')}</ToastAction>
-        ),
-      })
-      return;
-    }
-    dispatch(setGlobalState({ longArticleGenerationStatus: true }))
-  }
-
   return (
     <div className="h-full text-sm">
       {
         actinAIMenu.map((item, index) => {
           if (item.value === 'Full text translation') {
             return (<FullTextTranslationMenu key={item.value} />)
+          }
+          if (item.value === 'One click generation of long articles') {
+            return (<LongEssay menuItem={item} key={item.value} editorInstance={editorInstance} />)
           }
           return (
             <Button
@@ -112,9 +79,6 @@ export const AiTab = (props: {
                     selectRightMenu: global.selectRightMenu === 'IntelligentMapping' ? '' : 'IntelligentMapping',
                   }))
                 }
-                if (item.value === 'One click generation of long articles') {
-                  GenerateLongContent()
-                }
               }}
             >
               <div className="flex items-center ">
@@ -147,7 +111,6 @@ export const AiTab = (props: {
               description: (t('Please_enter_the_requirements'))
             })
           } else {
-            const { freeRewritingStatus } = global
             dispatch(setGlobalState({ rewriteDualScreen: true, freeRewritingStatus: true }))
           }
         }}>

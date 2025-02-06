@@ -204,5 +204,19 @@
   "Save_as_Image": "画像として保存",
   "open_docx": "オープンに失敗しました",
   "Generate_FlowChart": "フローチャートの生成",
-  "FlowChart": "フローチャート"
+  "FlowChart": "フローチャート",
+  "customLongArticle": "カスタムロングテキスト",
+  "customRequirements": "長い記事のカスタム要件を入力してください。",
+  "needIllustrations": "イラストが必要です",
+  "pictureSource": "画像ソース",
+  "longArticleOutline": "長い記事の概要",
+  "content": "コンテンツ",
+  "picture": "写真",
+  "generateOutline": "アウトラインを生成します",
+  "generateLongArticle": "長いテキストを生成します",
+  "regenerateOutline": "アウトラインを再生します",
+  "confirm": "もちろん",
+  "aiGenerated": "AI世代",
+  "ImageSearch": "画像検索",
+  "ImageSearchPriority": "画像検索の優先順位"
 }
