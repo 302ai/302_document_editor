@@ -100,12 +100,13 @@ export const contentSummary = async (param: Omit<IParams, 'query' | 'language'> 
 }
 
 // Link to MD
-export const WebToMd = async (url: string, api_key: string) => {
+export const WebToMd = async (url: string, api_key: string, signal?: AbortSignal) => {
   const result = await ky(`${process.env.NEXT_PUBLIC_API_URL}/jina/reader/${url}`, {
     method: 'get',
     timeout: false,
     redirect: 'follow',
     headers: { Authorization: `Bearer ${api_key}`, },
+    signal
   }).then(res => res.text());
   return result;
 }

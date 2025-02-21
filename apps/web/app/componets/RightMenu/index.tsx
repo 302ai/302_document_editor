@@ -8,6 +8,7 @@ import { RiCameraLensLine, RiRobot2Line } from "react-icons/ri";
 import type { EditorInstance } from "novel";
 import { InformationSearch } from "./InformationSearch";
 import { useTranslations } from "next-intl";
+import { NewsSubscription } from "./NewsSubscription/NewsSubscription";
 
 export const RightMenu = (props: { editorInstance: EditorInstance | null }) => {
 
@@ -47,6 +48,7 @@ export const RightMenu = (props: { editorInstance: EditorInstance | null }) => {
           </div>
         </div>
         <InformationSearch />
+        <NewsSubscription />
       </div>
     </div>
   )

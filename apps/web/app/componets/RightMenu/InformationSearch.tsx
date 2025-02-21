@@ -20,6 +20,7 @@ import { useCompletion } from "ai/react";
 import LoadAnimation from "@/components/tailwind/LoadAnimation";
 import { useTranslations } from "next-intl";
 import { Textarea } from "@/components/tailwind/ui/textarea";
+import { useConstant } from "./constant";
 
 interface IListData {
   id: string;
@@ -44,25 +45,7 @@ export const InformationSearch = () => {
   const [isContentSummary, setIsContentSummary] = useState(false)
   const [customizeWebsite, setCustomizeWebsite] = useState({ open: false, title: '', url: '', content: '', })
 
-
-  const searchTypeList = [
-    { value: 'Tavily', label: t('Tavily') },
-    { value: 'Bocha', label: t('Bocha') },
-    { value: 'Google', label: t('Google') },
-    { value: 'Bing', label: t('Bing') },
-  ]
-
-  const templateList: Array<{ value: string, label: string }> = [
-    { label: t('templateList.Listicle'), value: 'Listicle' },
-    { label: t('templateList.XThreads'), value: 'X Threads' },
-    { label: t('templateList.Briefing'), value: 'Briefing' },
-    { label: t('templateList.Summary'), value: 'Summary' },
-    { label: t('templateList.Tutorial'), value: 'Tutorial' },
-    { label: t('templateList.Newsletter'), value: 'Newsletter' },
-    { label: t('templateList.Article'), value: 'Article' },
-    { label: t('templateList.News_podcast_script'), value: 'News podcast script' },
-    { label: t('templateList.They_said'), value: 'They said' },
-  ]
+  const { templateList, searchTypeList } = useConstant(t)
 
   const SelectModule = (type: 'lang' | 'template' | 'searchType', list: Array<{ value: string, label: string }>) => {
     return (
@@ -94,11 +77,13 @@ export const InformationSearch = () => {
           const errorData = await response.json();
           toast({
             duration: 2000,
+            style: { zIndex: 99999 },
             description: (ErrMessage(errorData.error.err_code, global.language))
           })
         } catch (parseError) {
           toast({
             duration: 2000,
+            style: { zIndex: 99999 },
             description: (ErrMessage(0, global.language))
           })
         }
@@ -341,7 +326,7 @@ export const InformationSearch = () => {
           <div className={`text-xs text-center group-hover:text-[#8e47f0]`}>{t('Information_search')}</div>
         </div>
       </DialogTrigger>
-      <DialogContent className="h-[85%] sm:max-w-[85%] flex flex-col z-[99999] border-2 overflow-hidden">
+      <DialogContent className="h-[85%] sm:max-w-[85%] flex flex-col z-[9999] border-2 overflow-hidden">
         <DialogHeader>
           <DialogTitle />
           <DialogDescription />

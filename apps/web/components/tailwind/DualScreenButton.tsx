@@ -78,22 +78,6 @@ export default function DualScreenButton(props: IProps) {
       });
   }
 
-  const onOpenRecords = (item: IData) => {
-    window.localStorage.setItem("novel-id", `${item.id}`);
-    window.localStorage.setItem("novel-title", item.title);
-    window.localStorage.setItem("createdAt", item.createdAt);
-    window.localStorage.setItem("html-content", item.htmlContent);
-    window.localStorage.setItem("markdown", item.markdown);
-    if (item.novelContent) {
-      window.localStorage.setItem("novel-content", JSON.stringify(item.novelContent));
-    }
-    // Clear the entire document
-    dispatch(setGlobalState({
-      saveStatus: false, novelContent: item.novelContent, renew: !global.renew,
-      rewriteDualScreen: false, translateDualScreen: false, freeRewritingText: ''
-    }))
-  }
-
   const onToast = (description: string) => {
     toast({ duration: 2000, description })
   }
@@ -205,7 +189,8 @@ export default function DualScreenButton(props: IProps) {
           informationUrl: [],
           informationTemplate: '',
           informationLang: '',
-          informationCreationStatus: false
+          informationCreationStatus: false,
+          newsSubscriptionCreationStatus: false,
         }))
         break;
 
@@ -226,6 +211,10 @@ export default function DualScreenButton(props: IProps) {
           dispatch(setGlobalState({ selectRightMenu: 'InformationSearch' }))
           return
         }
+        if (global.newsSubscriptionCreationStatus) {
+          dispatch(setGlobalState({ selectRightMenu: 'NewsSubscription' }))
+          return
+        }
         onRegenerate(lingo)
         break;
       // Full text replacement
@@ -236,7 +225,7 @@ export default function DualScreenButton(props: IProps) {
         const oldTitle = localStorage.getItem('novel-title') || '';
         editorInstance.chain().clearContent().run()
         let newTitle = title
-        if (global.informationCreationStatus) {
+        if (global.informationCreationStatus || global.newsSubscriptionCreationStatus) {
           const { tempTitle, content } = getFirstTitle(newStr)
           newTitle = tempTitle;
           newStr = content;
@@ -254,6 +243,7 @@ export default function DualScreenButton(props: IProps) {
           translateDualScreen: false, freeRewritingText: '', editorStatus: true,
           novelSummary: '', novelTable: '', titleRecord: { oldTitle: oldTitle, status: true },
           selectRightMenu: '', informationGenerationStatus: false, informationCreationStatus: false,
+          newsSubscriptionCreationStatus: false, newsSubscriptionGenerationStatus: false
         }))
         break;
 
