@@ -30,7 +30,7 @@ interface GlobalStateProps {
   chatSelectText: string; // Editor content selected in the chat room
   illustrationStatus: boolean; // Open Generate Illustration
   settings: { hideBrand: boolean }, // Configure hidden brand information
-  selectRightMenu: '' | 'AiChat' | 'IntelligentMapping' | 'FullTextSummary' | 'InformationSearch' | 'FlowChart' | 'NewsSubscription'; // Select the menu bar on the right
+  selectRightMenu: '' | 'AiChat' | 'IntelligentMapping' | 'FullTextSummary' | 'InformationSearch' | 'FlowChart' | 'NewsSubscription' | 'SubtitleExtraction'; // Select the menu bar on the right
   informationCreationStatus: boolean, // Enter the state of information creation
   informationGenerationStatus: boolean, // Information creation generation status
   informationUrl: string[]; // URL selection for information creation
@@ -40,6 +40,9 @@ interface GlobalStateProps {
   intelligentInsert: number, // Position of illustration insertion
   newsSubscriptionCreationStatus: boolean, // 进入咨询订阅创作状态
   newsSubscriptionGenerationStatus: boolean, // 咨询订阅创作生成状态
+  subtitleExtractionCreationStatus: boolean,
+  subtitleExtractionGenerationStatus: boolean,
+  subtitleText: string;
 }
 
 export const globalStateSlice = createSlice({
@@ -80,7 +83,10 @@ export const globalStateSlice = createSlice({
     informationGenerationStatus: false,
     intelligentInsert: 0,
     newsSubscriptionCreationStatus: false,
-    newsSubscriptionGenerationStatus: false
+    newsSubscriptionGenerationStatus: false,
+    subtitleExtractionCreationStatus: false,
+    subtitleExtractionGenerationStatus: false,
+    subtitleText: ''
   } as GlobalStateProps,
   reducers: {
     setGlobalState: (

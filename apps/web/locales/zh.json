@@ -291,5 +291,15 @@
   "traditional_media": "传统媒体",
   "blog": "博客",
   "scientific_journals": "科学期刊",
-  "xiaoheihe_game_news": "小黑盒-游戏新闻"
+  "xiaoheihe_game_news": "小黑盒-游戏新闻",
+  "subtitleExtraction": "字幕提取",
+  "subtitleExtractionTitle": "提取字幕",
+  "subtitleExtractionDescription": "请输入视频链接以提取字幕。",
+  "videoLink": "视频链接",
+  "enterLink": "请输入链接",
+  "extractSubtitles": "提取字幕",
+  "subtitleExtractionFailed": "字幕提取失败",
+  "plaseSelectTemplate": "请选择生成模板",
+  "startCreating": "开始创作",
+  "selectTemplate": "选择模板"
 }

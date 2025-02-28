@@ -9,6 +9,7 @@ import type { EditorInstance } from "novel";
 import { InformationSearch } from "./InformationSearch";
 import { useTranslations } from "next-intl";
 import { NewsSubscription } from "./NewsSubscription/NewsSubscription";
+import { SubtitleExtraction } from "./SubtitleExtraction/SubtitleExtraction";
 
 export const RightMenu = (props: { editorInstance: EditorInstance | null }) => {
 
@@ -49,6 +50,7 @@ export const RightMenu = (props: { editorInstance: EditorInstance | null }) => {
         </div>
         <InformationSearch />
         <NewsSubscription />
+        <SubtitleExtraction />
       </div>
     </div>
   )

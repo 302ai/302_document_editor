@@ -139,6 +139,10 @@ const TailwindAdvancedEditorCopy = (props: IProps) => {
             description: (ErrMessage(0, global.language))
           })
         }
+        dispatch(setGlobalState({
+          informationGenerationStatus: false, newsSubscriptionGenerationStatus: false,
+          subtitleExtractionGenerationStatus: false, freeRewritingStatus: false
+        }))
       }
     },
   });
@@ -186,7 +190,11 @@ const TailwindAdvancedEditorCopy = (props: IProps) => {
       setTitle(novelTitle)
       isInitialized.current = true;
       onHandleRewriteDualScreen();
-      dispatch(setGlobalState({ informationGenerationStatus: false, informationCreationStatus: false, translateDualScreen: false, newsSubscriptionCreationStatus: false, newsSubscriptionGenerationStatus: false }))
+      dispatch(setGlobalState({
+        informationGenerationStatus: false, informationCreationStatus: false, translateDualScreen: false,
+        newsSubscriptionCreationStatus: false, newsSubscriptionGenerationStatus: false,
+        subtitleExtractionGenerationStatus: false, subtitleExtractionCreationStatus: false,
+      }))
     }
   }, [global.freeRewritingStatus, isInitialized.current])
 
@@ -195,17 +203,21 @@ const TailwindAdvancedEditorCopy = (props: IProps) => {
     if (global.translateDualScreen && !isInitialized.current) {
       isInitialized.current = true;
       onHandleTranslate('title');
-      dispatch(setGlobalState({ informationGenerationStatus: false, freeRewritingStatus: false, informationCreationStatus: false, newsSubscriptionCreationStatus: false, rewriteDualScreen: false, newsSubscriptionGenerationStatus: false }))
+      dispatch(setGlobalState({
+        subtitleExtractionGenerationStatus: false, subtitleExtractionCreationStatus: false,
+        informationGenerationStatus: false, freeRewritingStatus: false, informationCreationStatus: false,
+        newsSubscriptionCreationStatus: false, rewriteDualScreen: false, newsSubscriptionGenerationStatus: false
+      }))
     }
   }, [global.translateDualScreen, isInitialized.current])
 
 
   // Listening to information creation
   useEffect(() => {
-    if ((global.informationGenerationStatus || global.newsSubscriptionGenerationStatus) && (global.translateDualScreen && isInitialized.current)) {
+    if ((global.informationGenerationStatus || global.newsSubscriptionGenerationStatus || global.subtitleExtractionGenerationStatus) && (global.translateDualScreen && isInitialized.current)) {
       isInitialized.current = false;
     }
-    if ((global.informationGenerationStatus || global.newsSubscriptionGenerationStatus) && !isInitialized.current) {
+    if ((global.informationGenerationStatus || global.newsSubscriptionGenerationStatus || global.subtitleExtractionGenerationStatus) && !isInitialized.current) {
       isInitialized.current = true;
       stop();
       complete('', {
@@ -215,12 +227,13 @@ const TailwindAdvancedEditorCopy = (props: IProps) => {
             template: global.informationTemplate,
             language: global.informationLang,
             urls: global.informationUrl,
+            captions: global.subtitleText,
           },
         }
       })
       dispatch(setGlobalState({ freeRewritingStatus: false, translateDualScreen: false, rewriteDualScreen: false }))
     }
-  }, [global.informationGenerationStatus, global.newsSubscriptionGenerationStatus, isInitialized.current])
+  }, [global.informationGenerationStatus, global.newsSubscriptionGenerationStatus, global.subtitleExtractionGenerationStatus, isInitialized.current])
 
   // data fetch
   const isFirstUpdate = useRef(true);
@@ -269,12 +282,14 @@ const TailwindAdvancedEditorCopy = (props: IProps) => {
     if (global.translateDualScreen && !isLoading && translateTarget.current === 'title' && title) {
       onHandleTranslate('fullText', lingo)
     }
-    if (completion && !isLoading) {
-      if (global.informationCreationStatus || global.newsSubscriptionCreationStatus || global.freeRewritingStatus) {
-        isInitialized.current = false;
-      }
-      dispatch(setGlobalState({ informationGenerationStatus: false, newsSubscriptionGenerationStatus: false, freeRewritingStatus: false }))
+    if (global.informationCreationStatus || global.newsSubscriptionCreationStatus || global.subtitleExtractionCreationStatus || global.freeRewritingStatus) {
+      isInitialized.current = false;
+      setCompletion('')
     }
+    dispatch(setGlobalState({
+      informationGenerationStatus: false, newsSubscriptionGenerationStatus: false,
+      subtitleExtractionGenerationStatus: false, freeRewritingStatus: false
+    }))
   }, [completion, isLoading, translateTarget.current])
 
   if (!initialContent) return null;
@@ -286,7 +301,10 @@ const TailwindAdvancedEditorCopy = (props: IProps) => {
           {t('AI_is_thinking')}
           <Loader2 className="animate-spin" style={{ width: 16, height: 16 }} />
         </div>)}
-        <div className={`${className} px-[35px] pt-[5px] pb-[25px] flex items-center  shadow-none ${(global.informationCreationStatus || global.newsSubscriptionCreationStatus) && 'hidden'}`}>
+        <div className={`${className} px-[35px] pt-[5px] pb-[25px] flex items-center  shadow-none
+         ${(global.informationCreationStatus || global.newsSubscriptionCreationStatus || global.subtitleExtractionCreationStatus) && 'hidden'}
+         `}
+        >
           <p className="text-3xl font-bold border-0">{title}</p>
         </div>
         <EditorContent

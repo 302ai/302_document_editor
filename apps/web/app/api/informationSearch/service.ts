@@ -4,6 +4,8 @@ import { getPrompt } from "./getPrompt";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { generateIllustration } from "../generateIllustration/generateIllustration";
 import type { IBochaaiResult, IParams, ISearch1ApiResult, ITavilyResult } from "./interface";
+import { GenerateMainTextParagraphs } from "@/app/componets/RightMenu/SubtitleExtraction/service";
+
 export const runtime = "edge";
 
 const MAXIMUM = 10;
@@ -76,6 +78,7 @@ export const contentSummary = async (param: Omit<IParams, 'query' | 'language'> 
       n: 1,
     })
     if (isStream) {
+      // @ts-ignore
       const stream = OpenAIStream(response);
       return new StreamingTextResponse(stream);
     } else {
@@ -112,17 +115,22 @@ export const WebToMd = async (url: string, api_key: string, signal?: AbortSignal
 }
 
 // Article generation
-export const articleGeneration = async (param: Omit<IParams, 'query'> & { urls: string[], template: string }) => {
-  const { api_key, model, language, urls, template } = param;
+export const articleGeneration = async (param: Omit<IParams, 'query'> & { template: string, urls?: string[], captions?: string }) => {
+  const { api_key, model, language, urls, template, captions } = param;
   let content = '';
   // Extract link content
   try {
-    for (let i = 0; i < urls.length; i++) {
-      const result = await contentSummary({ ...param, url: urls[i] }, false);
-      if (result?.error) {
-        continue;
+    if (urls?.length) {
+      for (let i = 0; i < urls.length; i++) {
+        const result = await contentSummary({ ...param, url: urls[i] }, false);
+        if (result?.error) {
+          continue;
+        }
+        content += `\n\n${result?.choices[0]?.message?.content}`
       }
-      content += `\n\n${result?.choices[0]?.message?.content}`
+    }
+    if (captions && template.indexOf('SubtitleExtraction') > -1) {
+      content = await GenerateMainTextParagraphs({ template, apiKey: api_key, model, textContent: captions })
     }
     const fetchUrl = `${process.env.NEXT_PUBLIC_API_URL}/v1`
     const openai = new OpenAI({ apiKey: api_key, baseURL: fetchUrl });

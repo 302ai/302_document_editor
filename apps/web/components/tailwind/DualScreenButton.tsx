@@ -118,7 +118,7 @@ export default function DualScreenButton(props: IProps) {
         const markdownData = html2md(htmlContent)
         let markdown = markdownData.replace(/!\[.*?\]\(.*?\)/g, '\n$&\n');
         let newTitle = title
-        if (global.informationCreationStatus) {
+        if (global.informationCreationStatus || global.newsSubscriptionCreationStatus || global.subtitleExtractionCreationStatus) {
           const { tempTitle, content } = getFirstTitle(markdown)
           newTitle = tempTitle;
           markdown = content;
@@ -215,6 +215,10 @@ export default function DualScreenButton(props: IProps) {
           dispatch(setGlobalState({ selectRightMenu: 'NewsSubscription' }))
           return
         }
+        if (global.subtitleExtractionCreationStatus) {
+          dispatch(setGlobalState({ selectRightMenu: 'SubtitleExtraction' }))
+          return
+        }
         onRegenerate(lingo)
         break;
       // Full text replacement
@@ -225,7 +229,7 @@ export default function DualScreenButton(props: IProps) {
         const oldTitle = localStorage.getItem('novel-title') || '';
         editorInstance.chain().clearContent().run()
         let newTitle = title
-        if (global.informationCreationStatus || global.newsSubscriptionCreationStatus) {
+        if (global.informationCreationStatus || global.newsSubscriptionCreationStatus || global.subtitleExtractionCreationStatus) {
           const { tempTitle, content } = getFirstTitle(newStr)
           newTitle = tempTitle;
           newStr = content;
@@ -243,7 +247,8 @@ export default function DualScreenButton(props: IProps) {
           translateDualScreen: false, freeRewritingText: '', editorStatus: true,
           novelSummary: '', novelTable: '', titleRecord: { oldTitle: oldTitle, status: true },
           selectRightMenu: '', informationGenerationStatus: false, informationCreationStatus: false,
-          newsSubscriptionCreationStatus: false, newsSubscriptionGenerationStatus: false
+          newsSubscriptionCreationStatus: false, newsSubscriptionGenerationStatus: false,
+          subtitleExtractionGenerationStatus: false, subtitleExtractionCreationStatus: false,
         }))
         break;
 

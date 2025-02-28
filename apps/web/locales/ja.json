@@ -291,5 +291,15 @@
   "traditional_media": "伝統メディア",
   "blog": "ブログ",
   "scientific_journals": "科学雑誌",
-  "xiaoheihe_game_news": "小さなブラックボックスゲームのニュース"
+  "xiaoheihe_game_news": "小さなブラックボックスゲームのニュース",
+  "subtitleExtraction": "字幕抽出",
+  "subtitleExtractionTitle": "字幕を抽出する",
+  "subtitleExtractionDescription": "字幕を抽出するためにビデオリンクを入力してください。",
+  "videoLink": "ビデオリンク",
+  "enterLink": "リンクを入力してください",
+  "extractSubtitles": "字幕を抽出する",
+  "subtitleExtractionFailed": "字幕の抽出に失敗しました",
+  "startCreating": "作成を開始する",
+  "selectTemplate": "テンプレートを選択",
+  "plaseSelectTemplate": "テンプレートの生成を選択してください"
 }

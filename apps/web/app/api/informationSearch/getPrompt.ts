@@ -289,5 +289,185 @@ interface Result {
 skip the content which unnecessary and drop out the format.
 return in plain text, use the same language as the origin text. return the result directly, do not add any other contents.
 `
+
+    case 'SubtitleExtractionArticle':
+      return `#Role: Regular article content merging expert
+
+Output format: Markdown      
+
+## Task
+Merge multiple article sections into a unified, coherent article.
+
+## Guidelines
+1. Create a comprehensive narrative flow
+2. Eliminate redundant information
+3. Maintain consistent tone and style
+4. Preserve important quotes
+5. Ensure logical progression of ideas
+
+Output format
+## Title
+[Generate the most suitable title based on the content]
+
+## Introduction
+[Merged introduction establishing the main theme]
+
+## [Appropriate Section Headers]
+[Merged content with preserved quotes]
+
+## Conclusion
+[Synthesized conclusion]
+`
+    case 'SubtitleExtractionListicle':
+      return `#Role: List article content merging expert
+
+Output format: Markdown 
+
+##Task
+Merge multiple list article paragraphs into a coherent and complete article.
+
+##Guide
+1. Maintain consistency in numbering of all parts
+2. Remove duplicate key points
+3. Ensure smooth transitions between merged parts
+4. Keep the most relevant examples
+5. Maintain overall structure and tone
+
+##Required output structure
+#[Select the most suitable title from the input]
+
+##Introduction
+[merged introduction, maintaining key background]
+
+##Main viewpoint
+[Key points of integrated numbering]
+
+##Conclusion
+[Comprehensive conclusion]`
+
+    case 'SubtitleExtractionBriefing':
+      return `#Role: Expert in merging briefing content
+
+Output format: Markdown 
+
+##Task
+Integrate multiple brief paragraphs into a concise and comprehensive summary.
+
+##Guide
+1. Merge key points to avoid duplication
+2. Keep it concise and clear
+3. Ensure logical organization
+4. Retain the most influential insights
+5. Create a clear structure
+
+##Required output structure
+#[Select the most suitable title from the input]
+
+##Key points
+[Key points after merging and deduplication]
+
+##Background
+[Integrated background information]`
+
+    case 'SubtitleExtractionSummary':
+      return `#Role: Summarize article content and merge experts
+
+Output format: Markdown 
+
+##Task
+Merge multiple summary paragraphs into a comprehensive overview.
+
+##Guide
+1. Comprehensive overlapping themes
+2. Maintain clear thematic organization
+3. Ensure comprehensive coverage
+4. Keep the most relevant examples
+5. Create a smooth transition
+
+##Required output structure
+#[Select the most suitable title from the input]
+
+##Overview
+[Overview of merged themes]
+
+##Main topics
+[Integrated topic]`
+
+    case 'SubtitleExtractionTutorial':
+      return `#Role: Tutorial Content Merge Expert
+
+Output format: Markdown 
+
+##Task
+Merge multiple tutorial paragraphs into a complete step-by-step guide.
+
+##Guide
+1. Maintain logical progression of steps
+2. Preconditions for Effective Merger
+3. Ensure format consistency
+4. Merge similar steps appropriately
+5.Use subtitle to describe the problems, you should split the context to multi problems, and solve these problems
+
+##Required output structure
+#[Select the most suitable title from the input]
+
+##Preconditions
+[List of prerequisites for merging]
+
+##Questions
+[Write the problem directly, do not add other leadings such as 'Problem 1:']
+
+##Steps
+[after the problem, write the solve steps in ordered list]`
+
+    case 'SubtitleExtractionNewsletter':
+      return `#Role: News Release Content Merge Expert
+
+Output format: Markdown 
+
+##Task
+Merge multiple news release paragraphs into a coherent news article.
+
+##Guide
+1. Maintain the style of news writing
+2. Effectively merge references
+3. Maintain chronological order
+4. Ensure consistency in tone
+5. Retain the most newsworthy elements
+
+##Required output structure
+#[Select the most suitable title from the input]
+
+##Publication information
+[Latest Press Release Information]
+
+##Introduction
+[The most powerful introduction]
+
+##Main text
+[Merge content, retain references]`
+
+    case 'SubtitleExtractionNewsPodcastScript':
+      return `#Role: Podcast script content merging expert
+  
+Output format: Markdown 
+
+##Task
+Merge multiple podcast segments into a complete program script.
+
+##Guide
+1. Ensure smooth transitions between paragraphs
+2. Maintain the tone of the conversation
+3. Keep the most attractive content
+4. Maintain a consistent rhythm
+
+##Required output structure
+#[Select the most suitable title from the input]
+
+##Opening remarks
+[Opening remarks for merging]
+
+##Paragraph
+Output format: Markdown [Integrated paragraph]`
   }
 }

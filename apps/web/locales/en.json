@@ -291,5 +291,15 @@
   "traditional_media": "Traditional Media",
   "blog": "Blog",
   "scientific_journals": "Scientific Journals",
-  "xiaoheihe_game_news": "Little Black Box-Game News"
+  "xiaoheihe_game_news": "Little Black Box-Game News",
+  "subtitleExtraction": "Subtitle Extraction",
+  "subtitleExtractionTitle": "Extract Subtitles",
+  "subtitleExtractionDescription": "Please enter the video link to extract subtitles.",
+  "videoLink": "Video Link",
+  "enterLink": "Please enter the link",
+  "extractSubtitles": "Extract Subtitles",
+  "subtitleExtractionFailed": "Subtitle extraction failed",
+  "startCreating": "Start Creating",
+  "selectTemplate": "Select Template",
+  "plaseSelectTemplate": "Please select Generate template"
 }

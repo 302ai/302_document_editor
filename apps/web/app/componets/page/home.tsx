@@ -180,7 +180,7 @@ export default function Page() {
               className={`mx-auto ${global.wideLayout ? 'max-w-[1440px]' : 'max-w-[960px]'}`}
             />
             {
-              (global.translateDualScreen || global.rewriteDualScreen || global.informationCreationStatus || global.newsSubscriptionCreationStatus) &&
+              (global.translateDualScreen || global.rewriteDualScreen || global.informationCreationStatus || global.newsSubscriptionCreationStatus || global.subtitleExtractionCreationStatus) &&
               (<TailwindAdvancedEditorCopy
                 className={`mx-auto ${global.wideLayout ? 'max-w-[1440px]' : 'max-w-[960px]'}`}
                 editorInstance={editorInstance}
