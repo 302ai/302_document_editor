@@ -2,14 +2,14 @@
 
 <p align="center">AI文档编辑器利用语言大模型辅助用户进行长文创作，提供类似Word的编辑体验，提供高质量的AI全文总结、全文翻译、全文改写、全文朗读、智能配图、一键生成长文功能，提供九种风格化文档模板以供选择，并支持将文档导出为多种格式。</p>
 
-<p align="center"><a href="https://302.ai/tools/word/" target="blank"><img src="https://file.302.ai/gpt/imgs/github/20250102/72a57c4263944b73bf521830878ae39a.png" /></a></p >
+<p align="center"><a href="https://302.ai/product/detail/36" target="blank"><img src="https://file.302.ai/gpt/imgs/github/20250102/72a57c4263944b73bf521830878ae39a.png" /></a></p >
 
 <p align="center"><a href="README_zh.md">中文</a> | <a href="README.md">English</a> | <a href="README_ja.md">日本語</a></p>
 
 ![界面预览](docs/文档编辑器.png)    
 
 
-来自[302.AI](https://302.ai)的[AI 文档编辑器](https://302.ai/tools/word/)的开源版本。
+来自[302.AI](https://302.ai)的[AI 文档编辑器](https://302.ai/product/detail/36)的开源版本。
 你可以直接登录302.AI，零代码零配置使用在线版本。
 或者对本项目根据自己的需求进行修改，传入302.AI的API KEY，自行部署。
 
